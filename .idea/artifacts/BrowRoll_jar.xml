@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="BrowRoll:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/BrowRoll_jar</output-path>
+    <root id="archive" name="BrowRoll.jar">
+      <element id="module-output" name="BrowRoll" />
+    </root>
+  </artifact>
+</component>
