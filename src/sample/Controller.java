@@ -181,14 +181,8 @@ public class Controller {
     @FXML
     void onKekButtonPress() {
         mainTable.getItems().add(getJoke());
-
-        RotateTransition rt = new RotateTransition(Duration.millis(3000), mainTable);
-        if (mainTable.getRotate() % 360 != 0) {
-            rt.setByAngle(180 * 5);
-        } else {
-            rt.setByAngle(180 * Utils.getRandomBetween(1, 10));
-        }
-        rt.play();
+        randomRotateMainTable();
+        sort();
     }
 
     @FXML
@@ -206,6 +200,21 @@ public class Controller {
         mainTable.getSortOrder().clear();
         mainTable.getSortOrder().add(multiplierColumn);
         mainTable.sort();
+    }
+
+    private void randomRotateMainTable() {
+        RotateTransition rt = new RotateTransition(Duration.millis(2000), mainTable);
+        //так сложно, чтобы иногда таблица медленно переворачивалась на 180
+        int rotateNumber = Utils.getRandomBetween(1, 10);
+        if (rotateNumber != 1 && rotateNumber % 2 != 0)
+            rotateNumber++;
+        if (mainTable.getRotate() % 360 != 0) {
+            rt.setByAngle(-540);
+        } else {
+            mainTable.setRotate(0);
+            rt.setByAngle(180 * rotateNumber);
+        }
+        rt.play();
     }
 
     private int getNewMultiplier() {
