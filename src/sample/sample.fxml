@@ -4,34 +4,41 @@
 <?import javafx.scene.layout.*?>
 
 <VBox fx:id="mainVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: DimGray;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
-   <children>
-      <HBox style="-fx-background-color: dimgray;">
-         <children>
-            <ToolBar style="-fx-background-color: DimGray;" HBox.hgrow="ALWAYS">
-              <items>
-                  <TextField fx:id="newNameTA" promptText="Name" style="-fx-background-color: lightgray; -fx-prompt-text-fill: purple;" />
-                  <TextField fx:id="newMultiplierTA" promptText="Multiplier" style="-fx-background-color: lightgray; -fx-prompt-text-fill: purple;" />
-                <Button fx:id="addBtn" mnemonicParsing="false" onAction="#onAddButtonPress" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Добавить" />
-                  <Button fx:id="kekBtn" mnemonicParsing="false" onAction="#onKekButtonPress" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Подкрутить" textFill="purple" />
-              </items>
-            </ToolBar>
-             <ToolBar nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: DimGray;" HBox.hgrow="ALWAYS">
-                 <items>
-                     <Button fx:id="writeFileBtn" mnemonicParsing="false" onAction="#onWriteFileButtonPress" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Запись в файл" />
-                  <Button fx:id="sortBtn" mnemonicParsing="false" onAction="#onSortButtonPress" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Сортировать" />
-                 </items>
-             </ToolBar>
-         </children>
-      </HBox>
-      <TableView fx:id="mainTable" editable="true" prefHeight="551.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="idColumn" editable="false" prefWidth="100.0" resizable="false" text="ID" />
-          <TableColumn fx:id="nameColumn" onEditStart="#onAddButtonPress" prefWidth="100.0" text="name" />
-          <TableColumn fx:id="multiplierColumn" editable="false" prefWidth="100.0" resizable="false" text="X" />
-            <TableColumn fx:id="addColumn" editable="false" prefWidth="100.0" resizable="false" text="+" />
-            <TableColumn fx:id="decreaseColumn" editable="false" prefWidth="100.0" resizable="false" text="-" />
-            <TableColumn fx:id="removeColumn" editable="false" prefWidth="100.0" text="del" />
-        </columns>
-      </TableView>
-   </children>
+    <children>
+        <HBox style="-fx-background-color: dimgray;">
+            <children>
+                <ToolBar style="-fx-background-color: DimGray;" HBox.hgrow="ALWAYS">
+                    <items>
+                        <TextField fx:id="newNameTA" promptText="Name" style="-fx-background-color: lightgray; -fx-prompt-text-fill: purple;" />
+                        <TextField fx:id="newMultiplierTA" promptText="Multiplier" style="-fx-background-color: lightgray; -fx-prompt-text-fill: purple;" />
+                        <Button fx:id="addBtn" mnemonicParsing="false" onAction="#onAddButtonPress" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Добавить" />
+                        <Button fx:id="kekBtn" mnemonicParsing="false" onAction="#onKekButtonPress" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Подкрутить" textFill="#800080" />
+                  <Label style="-fx-font-weight: bold;" text="Всего пунктов:" textFill="lightgray"/>
+                  <Label fx:id="counterLabel" style="-fx-font-weight: bold;" text="0" textFill="lightgray" />
+                    </items>
+                </ToolBar>
+                <ToolBar nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: DimGray;" HBox.hgrow="ALWAYS">
+                    <items>
+                        <MenuButton mnemonicParsing="false" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Ролить">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#onWriteFileButtonPress" style="-fx-font-weight: bold;" text="Запись в файл" />
+                                <MenuItem fx:id="openInWebMenuItem" mnemonicParsing="false" onAction="#onOpenInBrowserButtonPress" style="-fx-font-weight: bold;" text="Открыть на Wheeldecide" />
+                            </items>
+                        </MenuButton>
+                        <Button fx:id="sortBtn" mnemonicParsing="false" onAction="#onSortButtonPress" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Сортировать" />
+                    </items>
+                </ToolBar>
+            </children>
+        </HBox>
+        <TableView fx:id="mainTable" editable="true" prefHeight="551.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="idColumn" editable="false" prefWidth="100.0" resizable="false" text="ID" />
+                <TableColumn fx:id="nameColumn" onEditStart="#onAddButtonPress" prefWidth="100.0" text="name" />
+                <TableColumn fx:id="multiplierColumn" editable="false" prefWidth="100.0" resizable="false" text="X" />
+                <TableColumn fx:id="addColumn" editable="false" prefWidth="100.0" resizable="false" text="+" />
+                <TableColumn fx:id="decreaseColumn" editable="false" prefWidth="100.0" resizable="false" text="-" />
+                <TableColumn fx:id="removeColumn" editable="false" prefWidth="100.0" text="del" />
+            </columns>
+        </TableView>
+    </children>
 </VBox>

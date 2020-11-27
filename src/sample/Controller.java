@@ -3,6 +3,10 @@ package sample;
 import javafx.animation.RotateTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
@@ -10,10 +14,15 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import sample.entity.WheelPoint;
 
+import java.awt.*;
 import java.io.*;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 public class Controller {
     @FXML
@@ -36,11 +45,37 @@ public class Controller {
     public TextField newMultiplierTA;
     @FXML
     public VBox mainVBox;
+    @FXML
+    public MenuItem openInWebMenuItem;
+    @FXML
+    public Label counterLabel;
 
     private int idCounter;
-    private String[] WAIFUS = new String[]{"Спидвагон", "Аска", "Рей", "Коната", "Брови", "Гит", "Нюк", "Мэд", "Бьёрн", "Варан", "Пепега", "Ндиди"};
-    private String[] GAMES = new String[]{"DOTA 2", "World of Tanks", "World of Warcraft", "Stormlord", "Chakan: The Forever Man", "The Lust of Ass 2", "Fortnite", "PUBG", "COD:Warzone", "Kappa в чат", "Шахматы", "Крестики-нолики", "Сапер", "Косынка", "Пить Йод", "Крутить подкрутку"};
-    private int JOKE_ID = 9999;
+    private final static String[] WAIFUS = new String[]{"Спидвагон", "Брови", "Гит", "Нюк", "Мэд", "Бьёрн", "Варан", "Пепе", "Ндиди"};
+    private final static String[] GAMES = new String[]{"DOTA 2", "World of Tanks", "World of Warcraft", "Stormlord", "Chakan: The Forever Man", "The Lust of Ass 2", "Fortnite", "PUBG", "COD:Warzone", "Kappa в чат", "Шахматы", "Крестики-нолики", "Сапер", "Косынка", "Пить Йод", "Крутить подкрутку"};
+    private final static String[] ANEK_START = new String[]{
+            "Как-то раз %s решил выбрать себе псевдоним",
+            "Нашел %s шляпу",
+            "%s так и не научился печь хлеб",
+            "Пришли как-то %s и Лупа получать зарплату",
+            "Идет %s, видит — подкова на дороге",
+            "Идет %s по пустыне",
+            "Пошел %s, купил ваксы, лицо натёр, тело натёр"
+    };
+    private final static String[] ANEK_END = new String[]{
+            "с тех под так и подписывал свои книги - %s.",
+            "а она ему как раз.",
+            "и выкинул, нахуй, c обрыва.",
+            "а %s в Щепки.",
+            "засунул себе в ухо и оглох.",
+            "и ебанулся с лошади насмерть.",
+            "схватил пузырь и убежал.",
+            "\"понятно\", сказал %s и сломал ему ногу.",
+            "%s не того стримера разбудил.",
+            "и у него отвалилась жопа."
+    };
+    private final static int JOKE_ID = 9999;
+    private final static String HWEEL_LINK = "https://wheeldecide.com/?";
 
     @FXML
     void initialize() {
@@ -103,6 +138,7 @@ public class Controller {
                                 WheelPoint wheelPoint = mainTable.getItems().get(getIndex());
                                 wheelPoint.addMultiplier();
                                 mainTable.refresh();
+                                countAllPoints();
                             });
                             setGraphic(btn);
                         }
@@ -132,6 +168,7 @@ public class Controller {
                                 WheelPoint wheelPoint = mainTable.getItems().get(getIndex());
                                 wheelPoint.decreaseMultiplier();
                                 mainTable.refresh();
+                                countAllPoints();
                             });
                             setGraphic(btn);
                         }
@@ -157,7 +194,10 @@ public class Controller {
                         if (empty) {
                             setGraphic(null);
                         } else {
-                            btn.setOnAction(event -> mainTable.getItems().remove(getIndex()));
+                            btn.setOnAction(event -> {
+                                mainTable.getItems().remove(getIndex());
+                                countAllPoints();
+                            });
                             setGraphic(btn);
                         }
                         setText(null);
@@ -176,18 +216,28 @@ public class Controller {
             newMultiplierTA.clear();
             mainTable.sort();
         }
+        countAllPoints();
     }
 
     @FXML
     void onKekButtonPress() {
         mainTable.getItems().add(getJoke());
+        for (int i = 0; i < 20; i++) {
+            mainTable.getItems().add(getJoke());
+        }
         randomRotateMainTable();
         sort();
+        countAllPoints();
     }
 
     @FXML
     void onWriteFileButtonPress() {
         createFileAndWrite(getPointsString());
+    }
+
+    @FXML
+    void onOpenInBrowserButtonPress() {
+        openWebpage(getPointsLink());
     }
 
     @FXML
@@ -200,6 +250,24 @@ public class Controller {
         mainTable.getSortOrder().clear();
         mainTable.getSortOrder().add(multiplierColumn);
         mainTable.sort();
+    }
+
+    private int countAllPoints() {
+        int counter = 0;
+        for (WheelPoint wheelPoint : mainTable.getItems()) {
+            if (wheelPoint.getId() != JOKE_ID) {
+                counter = counter + wheelPoint.getMultiplier();
+            }
+        }
+        counterLabel.setText(String.valueOf(counter));
+        if (counter > 100) {
+            openInWebMenuItem.setText("Слишком много пунктов. Wheeldecide принимает максимум 100");
+            openInWebMenuItem.setDisable(true);
+        } else {
+            openInWebMenuItem.setText("Открыть на Wheeldecide");
+            openInWebMenuItem.setDisable(false);
+        }
+        return counter;
     }
 
     private void randomRotateMainTable() {
@@ -239,6 +307,28 @@ public class Controller {
         return sb.toString();
     }
 
+    private String getPointsLink() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(HWEEL_LINK);
+        int counter = 1;
+        List<String> wheelPoints = new ArrayList<>();
+        for (WheelPoint wheelPoint : mainTable.getItems()) {
+            if (wheelPoint.getId() != JOKE_ID) {
+                for (int i = 0; i < wheelPoint.getMultiplier(); i++) {
+                    wheelPoints.add(wheelPoint.getName());
+                }
+            }
+        }
+        Collections.shuffle(wheelPoints);
+        for (String wheelPoint : wheelPoints) {
+            sb.append('c').append(counter).append('=').append(wheelPoint).append('&');
+            counter++;
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyy_HH_mm_ss");
+        sb.append('t').append('=').append("BrowRoll_").append(dateFormat.format(new Date())).append("&time=30");
+        return sb.toString();
+    }
+
     private void createFileAndWrite(String s) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyy_HH_mm_ss");
@@ -259,7 +349,7 @@ public class Controller {
     }
 
     private WheelPoint getJoke() {
-        int rnd = Utils.getRandomTo(13);
+        int rnd = Utils.getRandomTo(14);
         if (mainTable.getItems().size() > 0)
             rnd++;
         switch (rnd) {
@@ -275,8 +365,12 @@ public class Controller {
                 return new WheelPoint(JOKE_ID, "Анимешники не человеки.", 0);
             case 5:
                 return new WheelPoint(JOKE_ID, "Анимешники - сверхчеловеки.", 0);
-            case 6:
-                return new WheelPoint(JOKE_ID, "Ваше очко уходит в зрительный зал.", 0);
+            case 6: {
+                if (Utils.getRandomTo(1) == 0)
+                    return new WheelPoint(JOKE_ID, "Ваше очко уходит в зрительный зал.", 0);
+                else
+                    return new WheelPoint(JOKE_ID, "Зрительный зал уходит в ваше очко.", 0);
+            }
             case 7:
                 return new WheelPoint(JOKE_ID, String.format("%s - лучшая вайфу. <3", getWaifu()), 0);
             case 8:
@@ -292,18 +386,36 @@ public class Controller {
             case 13:
                 return new WheelPoint(JOKE_ID, "+игра на все платформы", 0);
             case 14:
+                return new WheelPoint(JOKE_ID, getAnek(), 0);
+            case 15:
                 return new WheelPoint(JOKE_ID, String.format("%s - ну и говно, кто это заказал?", getRandomNameFromTable()), -999);
             default:
                 return new WheelPoint(JOKE_ID, getRandomGameName(), 999);
         }
     }
 
+    private String getRandomStringFromArray(String[] array) {
+        return array[Utils.getRandomTo(array.length - 1)];
+    }
+
     private String getWaifu() {
-        return WAIFUS[Utils.getRandomTo(WAIFUS.length - 1)];
+        return getRandomStringFromArray(WAIFUS);
     }
 
     private String getGame() {
-        return GAMES[Utils.getRandomTo(GAMES.length - 1)];
+        return getRandomStringFromArray(GAMES);
+    }
+
+    private String getStartAnek() {
+        return getRandomStringFromArray(ANEK_START);
+    }
+
+    private String getEndAnek() {
+        return getRandomStringFromArray(ANEK_END);
+    }
+
+    private String getAnek() {
+        return String.format(getStartAnek(), getWaifu()) + ", " + String.format(getEndAnek(), getWaifu());
     }
 
     private String getRandomNameFromTable() {
@@ -321,5 +433,18 @@ public class Controller {
         }
     }
 
+    //TODO вынести в ютилс
+    private static boolean openWebpage(String link) {
+        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(new URI(link));
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
 
 }
