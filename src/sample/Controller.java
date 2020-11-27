@@ -222,9 +222,6 @@ public class Controller {
     @FXML
     void onKekButtonPress() {
         mainTable.getItems().add(getJoke());
-        for (int i = 0; i < 20; i++) {
-            mainTable.getItems().add(getJoke());
-        }
         randomRotateMainTable();
         sort();
         countAllPoints();
