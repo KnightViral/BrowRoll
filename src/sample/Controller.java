@@ -76,7 +76,7 @@ public class Controller {
             "и у него отвалилась жопа."
     };
     private final static int JOKE_ID = 9999;
-    private final static String HWEEL_LINK = "https://wheeldecide.com/?";
+    private final static String WHEEL_LINK = "https://wheeldecide.com/?";
 
     @FXML
     void initialize() {
@@ -307,13 +307,13 @@ public class Controller {
 
     private String getPointsLink() {
         StringBuilder errorSB = new StringBuilder();
-        errorSB.append(HWEEL_LINK);
+        errorSB.append(WHEEL_LINK);
         errorSB.append('c').append(1).append('=').append("Пук").append('&');
         errorSB.append('c').append(2).append('=').append("Среньк").append('&');
         errorSB.append('c').append(3).append('=').append("Fallout_76").append('&');
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append(HWEEL_LINK);
+            sb.append(WHEEL_LINK);
             int counter = 1;
             List<String> wheelPoints = new ArrayList<>();
             for (WheelPoint wheelPoint : mainTable.getItems()) {
@@ -377,7 +377,7 @@ public class Controller {
                 if (Utils.getRandomTo(1) == 0)
                     return new WheelPoint(JOKE_ID, "Стример - писька.", 0);
                 else
-                    return new WheelPoint(JOKE_ID, "Я заготовил кучу фраз, все не перекрутите. (нет)", 0);
+                    return new WheelPoint(JOKE_ID, String.format("Я заготовил %s фраз, все не перекрутите. (нет)",Utils.getRandomBetween(1451,5552)), 0);
             }
             case 2:
                 return new WheelPoint(JOKE_ID, "Хватит, голова кружится.", 0);
