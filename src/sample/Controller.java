@@ -17,6 +17,7 @@ import sample.entity.WheelPoint;
 import java.awt.*;
 import java.io.*;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class Controller {
 
     private int idCounter;
     private final static String[] WAIFUS = new String[]{"Спидвагон", "Брови", "Гит", "Нюк", "Мэд", "Бьёрн", "Варан", "Пепе", "Ндиди"};
-    private final static String[] GAMES = new String[]{"DOTA 2", "World of Tanks", "World of Warcraft", "Stormlord", "Chakan: The Forever Man", "The Lust of Ass 2", "Fortnite", "PUBG", "COD:Warzone", "Kappa в чат", "Шахматы", "Крестики-нолики", "Сапер", "Косынка", "Пить Йод", "Крутить подкрутку"};
+    private final static String[] GAMES = new String[]{"DOTA 2", "World of Tanks", "World of Warcraft", "Stormlord", "Chakan: The Forever Man", "The Lust of Ass 2", "Fortnite", "PUBG", "COD:Warzone", "Пук среньк Fallout 76", "Kappa в чат", "Шахматы", "Крестики-нолики", "Сапер", "Косынка", "Пить Йод", "Крутить подкрутку"};
     private final static String[] ANEK_START = new String[]{
             "Как-то раз %s решил выбрать себе псевдоним",
             "Нашел %s шляпу",
@@ -305,31 +306,51 @@ public class Controller {
     }
 
     private String getPointsLink() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(HWEEL_LINK);
-        int counter = 1;
-        List<String> wheelPoints = new ArrayList<>();
-        for (WheelPoint wheelPoint : mainTable.getItems()) {
-            if (wheelPoint.getId() != JOKE_ID) {
-                for (int i = 0; i < wheelPoint.getMultiplier(); i++) {
-                    wheelPoints.add(wheelPoint.getName());
+        StringBuilder errorSB = new StringBuilder();
+        errorSB.append(HWEEL_LINK);
+        errorSB.append('c').append(1).append('=').append("Пук").append('&');
+        errorSB.append('c').append(2).append('=').append("Среньк").append('&');
+        errorSB.append('c').append(3).append('=').append("Fallout_76").append('&');
+        try {
+            StringBuilder sb = new StringBuilder();
+            sb.append(HWEEL_LINK);
+            int counter = 1;
+            List<String> wheelPoints = new ArrayList<>();
+            for (WheelPoint wheelPoint : mainTable.getItems()) {
+                if (wheelPoint.getId() != JOKE_ID) {
+                    for (int i = 0; i < wheelPoint.getMultiplier(); i++) {
+                        wheelPoints.add(wheelPoint.getName());
+                    }
                 }
             }
+            if (!wheelPoints.isEmpty()) {
+                Collections.shuffle(wheelPoints);
+                for (String wheelPoint : wheelPoints) {
+                    sb.append('c').append(counter).append('=').append(URLEncoder.encode(wheelPoint, "UTF-8")).append('&');
+                    counter++;
+                }
+
+                sb.append('t').append('=').append(generateBrowRollName()).append("&time=30");
+            } else {
+                errorSB.append('t').append('=').append("Добавьте_пункты_в_таблицу_перед_роллом").append("&time=30");
+                return errorSB.toString();
+            }
+            return sb.toString();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            errorSB.append('t').append('=').append("Ошибка.").append("&time=30");
+            return errorSB.toString();
         }
-        Collections.shuffle(wheelPoints);
-        for (String wheelPoint : wheelPoints) {
-            sb.append('c').append(counter).append('=').append(wheelPoint).append('&');
-            counter++;
-        }
+    }
+
+    private String generateBrowRollName() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyy_HH_mm_ss");
-        sb.append('t').append('=').append("BrowRoll_").append(dateFormat.format(new Date())).append("&time=30");
-        return sb.toString();
+        return "BrowRoll_" + dateFormat.format(new Date());
     }
 
     private void createFileAndWrite(String s) {
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyy_HH_mm_ss");
-            File myObj = new File("BrowRoll_" + dateFormat.format(new Date()) + ".txt");
+            File myObj = new File(generateBrowRollName() + ".txt");
             if (myObj.createNewFile()) {
                 System.out.println("File created: " + myObj.getName());
                 OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(myObj), StandardCharsets.UTF_8);
@@ -346,45 +367,49 @@ public class Controller {
     }
 
     private WheelPoint getJoke() {
-        int rnd = Utils.getRandomTo(14);
+        int rnd = Utils.getRandomTo(12);
         if (mainTable.getItems().size() > 0)
             rnd++;
         switch (rnd) {
             case 0:
                 return new WheelPoint(JOKE_ID, "Анус себе подкрути, пес. Keepo", 0);
-            case 1:
-                return new WheelPoint(JOKE_ID, "Стример - писька.", 0);
+            case 1: {
+                if (Utils.getRandomTo(1) == 0)
+                    return new WheelPoint(JOKE_ID, "Стример - писька.", 0);
+                else
+                    return new WheelPoint(JOKE_ID, "Я заготовил кучу фраз, все не перекрутите. (нет)", 0);
+            }
             case 2:
                 return new WheelPoint(JOKE_ID, "Хватит, голова кружится.", 0);
-            case 3:
-                return new WheelPoint(JOKE_ID, "Я заготовил кучу фраз, все не перекрутите. (нет)", 0);
-            case 4:
-                return new WheelPoint(JOKE_ID, "Анимешники не человеки.", 0);
-            case 5:
-                return new WheelPoint(JOKE_ID, "Анимешники - сверхчеловеки.", 0);
-            case 6: {
+            case 3: {
+                if (Utils.getRandomTo(1) == 0)
+                    return new WheelPoint(JOKE_ID, "Анимешники не человеки.", 0);
+                else
+                    return new WheelPoint(JOKE_ID, "Анимешники - сверхчеловеки.", 0);
+            }
+            case 4: {
                 if (Utils.getRandomTo(1) == 0)
                     return new WheelPoint(JOKE_ID, "Ваше очко уходит в зрительный зал.", 0);
                 else
                     return new WheelPoint(JOKE_ID, "Зрительный зал уходит в ваше очко.", 0);
             }
-            case 7:
+            case 5:
                 return new WheelPoint(JOKE_ID, String.format("%s - лучшая вайфу. <3", getWaifu()), 0);
-            case 8:
+            case 6:
                 return new WheelPoint(JOKE_ID, String.format("%s - лучшая игра.", getGame()), 0);
-            case 9:
+            case 7:
                 return new WheelPoint(JOKE_ID, getRandomGameName(), 999);
-            case 10:
+            case 8:
                 return new WheelPoint(JOKE_ID, "Осуждаю", 0);
-            case 11:
+            case 9:
                 return new WheelPoint(JOKE_ID, "Кто спросил:\"Что делает подкрутка?\", тот выигрывает таймач.", 0);
-            case 12:
+            case 10:
                 return new WheelPoint(JOKE_ID, "Ндиди", 0);
-            case 13:
+            case 11:
                 return new WheelPoint(JOKE_ID, "+игра на все платформы", 0);
-            case 14:
+            case 12:
                 return new WheelPoint(JOKE_ID, getAnek(), 0);
-            case 15:
+            case 13:
                 return new WheelPoint(JOKE_ID, String.format("%s - ну и говно, кто это заказал?", getRandomNameFromTable()), -999);
             default:
                 return new WheelPoint(JOKE_ID, getRandomGameName(), 999);
