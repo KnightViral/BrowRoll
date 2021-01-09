@@ -1,5 +1,10 @@
+/*<<<<<<<<<<<<<<<<<<<<<< Table-view START >>>>>>>>>>>>>>>>>>>>>>>>*/
 .table-view {
     -fx-background-color: DimGray;
+    -fx-background-image: url("resource/pics/browFat.jpg");
+    -fx-background-size: cover;
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
 }
 .table-view .column-header {
      -fx-background-color: DimGray;
@@ -39,9 +44,68 @@
 .table-view .virtual-flow .scroll-bar:horizontal .thumb {
     -fx-background-color:  #575757;
 }
+/*<<<<<<<<<<<<<<<<<<<<<< Table-view END >>>>>>>>>>>>>>>>>>>>>>>>*/
 
-
-
+/*<<<<<<<<<<<<<<<<<<<<<< Button START >>>>>>>>>>>>>>>>>>>>>>>>*/
 .button {
     -fx-background-color: lightgray;
 }
+/*<<<<<<<<<<<<<<<<<<<<<< Button END >>>>>>>>>>>>>>>>>>>>>>>>*/
+
+/*<<<<<<<<<<<<<<<<<<<<<< Tab-pane START >>>>>>>>>>>>>>>>>>>>>>>>*/
+.tab-pane .tab-header-background
+{
+    -fx-background-color: DimGray;
+}
+
+.tab-pane .tab
+{
+    -fx-background-color: lightgray;
+}
+
+.tab-pane .tab:selected
+{
+    -fx-background-color: purple;
+}
+
+.tab .tab-label {
+    -fx-font-weight: bold;
+}
+
+.tab .tab-label .{
+    -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: white;
+}
+/*<<<<<<<<<<<<<<<<<<<<<< Tab-pane END >>>>>>>>>>>>>>>>>>>>>>>>*/
+
+/*<<<<<<<<<<<<<<<<<<<<<< Pie-chart START >>>>>>>>>>>>>>>>>>>>>>>>*/
+.chart-pie-label-line {
+    -fx-stroke: white;
+    -fx-fill: white;
+}
+
+.chart-pie-label {
+    -fx-fill: white;
+    -fx-font-weight: bold;
+}
+.chart-legend {
+   -fx-background-color:  #fafad2;
+   -fx-stroke: #daa520;
+}
+/*<<<<<<<<<<<<<<<<<<<<<< Pie-chart END >>>>>>>>>>>>>>>>>>>>>>>>*/
+
+/*<<<<<<<<<<<<<<<<<<<<<< Tool-bar START >>>>>>>>>>>>>>>>>>>>>>>>*/
+.tool-bar:horizontal {
+    -fx-background: DimGray;
+}
+/*<<<<<<<<<<<<<<<<<<<<<< Tool-bar END >>>>>>>>>>>>>>>>>>>>>>>>*/
+
+/*<<<<<<<<<<<<<<<<<<<<<< Text-field START >>>>>>>>>>>>>>>>>>>>>>>>*/
+.text-field:horizontal {
+    -fx-background-color: lightgray;
+    -fx-prompt-text-fill: purple;
+}
+/*<<<<<<<<<<<<<<<<<<<<<< Text-field END >>>>>>>>>>>>>>>>>>>>>>>>*/

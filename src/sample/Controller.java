@@ -1,7 +1,10 @@
 package sample;
 
 import javafx.animation.RotateTransition;
+import javafx.beans.property.BooleanProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,20 +12,24 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
+import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import javafx.scene.image.Image;
+import sample.entity.MyAudioTrack;
 import sample.entity.WheelPoint;
 
+import javax.sound.sampled.AudioSystem;
 import java.awt.*;
 import java.io.*;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 
 public class Controller {
@@ -39,6 +46,10 @@ public class Controller {
     @FXML
     public TableColumn<WheelPoint, Void> removeColumn;
     @FXML
+    public TableColumn<WheelPoint, Void> addNumberColumn;
+    @FXML
+    public TableColumn<WheelPoint, Void> percentColumn;
+    @FXML
     public TableView<WheelPoint> mainTable;
     @FXML
     public TextField newNameTA;
@@ -50,6 +61,20 @@ public class Controller {
     public MenuItem openInWebMenuItem;
     @FXML
     public Label counterLabel;
+    @FXML
+    public Label counterLabelCaption;
+    @FXML
+    public PieChart wheelPC;
+    @FXML
+    public StackPane wheelSPane;
+    @FXML
+    public TabPane tabPane;
+    @FXML
+    public Button rollBtn;
+    @FXML
+    public ImageView wheelArrowImg;
+    @FXML
+    public ImageView browRollImg;
 
     private int idCounter;
     private final static String[] WAIFUS = new String[]{"Спидвагон", "Брови", "Гит", "Нюк", "Мэд", "Бьёрн", "Варан", "Пепе", "Ндиди"};
@@ -75,24 +100,48 @@ public class Controller {
             "%s не того стримера разбудил.",
             "и у него отвалилась жопа."
     };
+    private final static String[] END_SOUNDS = new String[]{"300.wav", "Deep dark fantasies.wav", "fuck you.wav", "Iam an artist.wav", "NANI.wav", "Omae wa mou shindeiru.wav", "Spank.wav", "WOO.wav", "YES I AM.wav", "YES YES YES YES YES.wav"};
     private final static int JOKE_ID = 9999;
     private final static String WHEEL_LINK = "https://wheeldecide.com/?";
+    private double countPoints = 0;
 
     @FXML
     void initialize() {
         initTable();
-        mainTable.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        initWheel();
+        initTabPane();
         idCounter = 1;
-        sort();
+        onRubblesTypeButtonPress();
+    }
+
+    private void initWheel() {
+        wheelPC.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+    }
+
+    private void initTabPane() {
+        tabPane.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        initWheelTab();
+    }
+
+    private void initWheelTab() {
+        wheelArrowImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/mark.png"))));
+        wheelArrowImg.fitWidthProperty().bind(wheelSPane.widthProperty());
+        wheelArrowImg.fitHeightProperty().bind(wheelSPane.heightProperty());
+        wheelArrowImg.setSmooth(false);
+        browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/browFatRoll.png"))));
     }
 
     private void initTable() {
         initIdColumn();
         initNameColumn();
+        initPercentColumn();
         initMultiplierColumn();
         initAddColumn();
         initDecreaseColumn();
+        initAddNumberColumn();
         initRemoveColumn();
+        mainTable.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        sort();
     }
 
     private void initIdColumn() {
@@ -106,21 +155,22 @@ public class Controller {
         nameColumn.setCellFactory(
                 TextFieldTableCell.forTableColumn());
         nameColumn.setOnEditCommit(event -> {
-                    mainTable.getItems().get(event.getTablePosition().getRow()).setName(event.getNewValue());
+                    changeTableElementName(event.getRowValue(), event.getNewValue());
                 }
         );
         if (idColumn.isVisible())
-            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.75));
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.70));
         else
-            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.8));
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.75));
     }
 
     private void initMultiplierColumn() {
-        multiplierColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.05));
+        multiplierColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.1));
         multiplierColumn.setCellValueFactory(new PropertyValueFactory<>("multiplier"));
     }
 
     private void initAddColumn() {
+        addColumn.setVisible(false);
         addColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.05));
         addColumn.setCellFactory(new Callback<TableColumn<WheelPoint, Void>, TableCell<WheelPoint, Void>>() {
             @Override
@@ -138,9 +188,12 @@ public class Controller {
                             btn.setOnAction(event -> {
                                 WheelPoint wheelPoint = mainTable.getItems().get(getIndex());
                                 wheelPoint.addMultiplier();
+                                changeTableElementMultiplier(wheelPoint, wheelPoint.getMultiplier());
                                 mainTable.refresh();
                                 countAllPoints();
                             });
+                            btn.setPrefHeight(21);
+                            btn.setMinHeight(21);
                             setGraphic(btn);
                         }
                         setText(null);
@@ -151,6 +204,7 @@ public class Controller {
     }
 
     private void initDecreaseColumn() {
+        decreaseColumn.setVisible(false);
         decreaseColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.05));
         decreaseColumn.setCellFactory(new Callback<TableColumn<WheelPoint, Void>, TableCell<WheelPoint, Void>>() {
             @Override
@@ -168,9 +222,12 @@ public class Controller {
                             btn.setOnAction(event -> {
                                 WheelPoint wheelPoint = mainTable.getItems().get(getIndex());
                                 wheelPoint.decreaseMultiplier();
+                                changeTableElementMultiplier(wheelPoint, wheelPoint.getMultiplier());
                                 mainTable.refresh();
                                 countAllPoints();
                             });
+                            btn.setPrefHeight(21);
+                            btn.setMinHeight(21);
                             setGraphic(btn);
                         }
                         setText(null);
@@ -196,9 +253,11 @@ public class Controller {
                             setGraphic(null);
                         } else {
                             btn.setOnAction(event -> {
-                                mainTable.getItems().remove(getIndex());
+                                removeFromTable(mainTable.getItems().get(getIndex()));
                                 countAllPoints();
                             });
+                            btn.setPrefHeight(21);
+                            btn.setMinHeight(21);
                             setGraphic(btn);
                         }
                         setText(null);
@@ -208,21 +267,154 @@ public class Controller {
         });
     }
 
+    private void initAddNumberColumn() {
+        addNumberColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.10));
+        addNumberColumn.setCellFactory(new Callback<TableColumn<WheelPoint, Void>, TableCell<WheelPoint, Void>>() {
+            @Override
+            public TableCell<WheelPoint, Void> call(TableColumn param) {
+                return new TableCell<WheelPoint, Void>() {
+
+                    final TextField tf = new TextField();
+                    final Button btn = new Button("+");
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            btn.setOnAction(event -> {
+                                WheelPoint wheelPoint = mainTable.getItems().get(getIndex());
+                                double number = 0;
+                                String value = tf.getText();
+                                try {
+                                    number = Double.parseDouble(value);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    try {
+                                        number = Double.parseDouble(value.replace(',', '.'));
+                                    } catch (Exception e2) {
+                                        e2.printStackTrace();
+                                    }
+                                }
+                                changeTableElementMultiplier(wheelPoint, wheelPoint.getMultiplier() + number);
+                                mainTable.refresh();
+                                countAllPoints();
+                                sort();
+                            });
+                            btn.setPrefHeight(21);
+                            btn.setMinHeight(21);
+                            tf.setPrefHeight(21);
+                            tf.setMinHeight(21);
+                            tf.setPrefWidth(60);
+                            setGraphic(new HBox(tf, btn));
+                        }
+                        setText(null);
+                    }
+                };
+            }
+        });
+    }
+
+    private void initPercentColumn() {
+        percentColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.05));
+        percentColumn.setCellFactory(new Callback<TableColumn<WheelPoint, Void>, TableCell<WheelPoint, Void>>() {
+            @Override
+            public TableCell<WheelPoint, Void> call(TableColumn param) {
+                return new TableCell<WheelPoint, Void>() {
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (getIndex() >= 0 &&
+                                mainTable.getItems().size() > getIndex() &&
+                                countPoints > 0 &&
+                                mainTable.getItems().get(getIndex()).getMultiplier() > 0 &&
+                                mainTable.getItems().get(getIndex()).getId() != JOKE_ID
+                        )
+                            setText(String.format("%.1f", (double) mainTable.getItems().get(getIndex()).getMultiplier() / countPoints * 100));
+                        else
+                            setText(null);
+                    }
+                };
+            }
+        });
+    }
+
+    private void addToTable(WheelPoint wheelPoint) {
+        if (wheelPoint.getId() != JOKE_ID) {
+            boolean unique = true;
+            WheelPoint oldElement = null;
+            for (WheelPoint item : mainTable.getItems()) {
+                if (item.getName().equals(wheelPoint.getName())) {
+                    unique = false;
+                    oldElement = item;
+                    break;
+                }
+            }
+            if (unique) {
+                mainTable.getItems().add(wheelPoint);
+                addToWheel(wheelPoint.getName(), wheelPoint.getMultiplier());
+            } else
+                changeTableElementMultiplier(oldElement, oldElement.getMultiplier() + wheelPoint.getMultiplier());
+        } else {
+            mainTable.getItems().add(wheelPoint);
+        }
+        mainTable.refresh();
+    }
+
+    private void removeFromTable(WheelPoint wheelPoint) {
+        if (wheelPoint.getId() != JOKE_ID) {
+            PieChart.Data toRemove = null;
+            for (PieChart.Data data : wheelPC.getData()) {
+                if (wheelPoint.getName().equals(data.getName()))
+                    toRemove = data;
+            }
+            wheelPC.getData().remove(toRemove);
+            //TODO исключение если ничего не нашли
+        }
+        mainTable.getItems().remove(wheelPoint);
+        mainTable.refresh();
+    }
+
+    private void changeTableElementName(WheelPoint wheelPoint, String newName) {
+        String oldName = wheelPoint.getName();
+        wheelPoint.setName(newName);
+        if (wheelPoint.getId() != JOKE_ID) {
+            wheelPC.getData().forEach(data -> {
+                if (data.getName().equals(oldName))
+                    data.setName(newName);
+            });
+        }
+        mainTable.refresh();
+    }
+
+    private void changeTableElementMultiplier(WheelPoint wheelPoint, double value) {
+        wheelPoint.setMultiplier(value);
+        if (wheelPoint.getId() != JOKE_ID) {
+            wheelPC.getData().forEach(data -> {
+                if (data.getName().equals(wheelPoint.getName()))
+                    data.setPieValue(value);
+            });
+        }
+        mainTable.refresh();
+    }
+
     @FXML
     void onAddButtonPress() {
         if (!newNameTA.getText().isEmpty()) {
-            mainTable.getItems().add(new WheelPoint(idCounter, newNameTA.getText(), getNewMultiplier()));
+            addToTable(new WheelPoint(idCounter, newNameTA.getText(), getNewMultiplier()));
             idCounter++;
             newNameTA.clear();
             newMultiplierTA.clear();
-            mainTable.sort();
+            sort();
         }
         countAllPoints();
     }
 
     @FXML
     void onKekButtonPress() {
-        mainTable.getItems().add(getJoke());
+        addToTable(getJoke());
         randomRotateMainTable();
         sort();
         countAllPoints();
@@ -243,6 +435,85 @@ public class Controller {
         sort();
     }
 
+    @FXML
+    void onRecountWheelButtonPress() {
+        calculateWheel(countAllPoints());
+    }
+
+    @FXML
+    void onHideShowWheelNamesButtonPress() {
+        wheelPC.setLabelsVisible(!wheelPC.labelsVisibleProperty().getValue());
+    }
+
+    @FXML
+    void onTestSoundButtonPress() {
+        try {
+            MyAudioTrack trackFinish = new MyAudioTrack(this.getClass().getResource("resource/" + getRandomStringFromArray(END_SOUNDS)), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+            trackFinish.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void onRollButtonPress() {
+        if (!wheelPC.getData().isEmpty()) {
+            rollBtn.setText("Крутонуть");
+            wheelPC.setRotate(0);
+            RotateTransition rt = new RotateTransition(Duration.millis(15000), wheelPC);
+            rt.setByAngle(Utils.getRandomBetween(18000, 36000));
+            browRollImg.setRotate(0);
+            browRollImg.setVisible(true);
+            RotateTransition rtBrow = new RotateTransition(Duration.millis(15000), browRollImg);
+            rtBrow.setByAngle(-Utils.getRandomBetween(720, 1920));
+            Controller c = this;
+            try {
+                MyAudioTrack track = new MyAudioTrack(c.getClass().getResource("resource/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                track.start();
+                rt.setOnFinished(event -> {
+                    rollBtn.setText(checkRollWinner());
+                    track.stop();
+                    MyAudioTrack trackFinish = new MyAudioTrack(c.getClass().getResource("resource/" + getRandomStringFromArray(END_SOUNDS)), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                    trackFinish.start();
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                rt.setOnFinished(event -> rollBtn.setText(checkRollWinner()));
+            }
+            rtBrow.setOnFinished(event -> browRollImg.setVisible(false));
+            rt.play();
+            rtBrow.play();
+        }
+    }
+
+    @FXML
+    void onHundredsTypeButtonPress() {
+        addColumn.setVisible(true);
+        decreaseColumn.setVisible(true);
+        addNumberColumn.setVisible(false);
+        counterLabelCaption.setVisible(true);
+        counterLabel.setVisible(true);
+        newMultiplierTA.setPromptText("Множитель");
+        if (idColumn.isVisible())
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.65));
+        else
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.70));
+    }
+
+    @FXML
+    void onRubblesTypeButtonPress() {
+        addColumn.setVisible(false);
+        decreaseColumn.setVisible(false);
+        addNumberColumn.setVisible(true);
+        counterLabelCaption.setVisible(false);
+        counterLabel.setVisible(false);
+        newMultiplierTA.setPromptText("Сумма");
+        if (idColumn.isVisible())
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.65));
+        else
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.70));
+    }
+
     private void sort() {
         multiplierColumn.setSortType(TableColumn.SortType.DESCENDING);
         mainTable.getSortOrder().clear();
@@ -250,8 +521,24 @@ public class Controller {
         mainTable.sort();
     }
 
-    private int countAllPoints() {
-        int counter = 0;
+    private String checkRollWinner() {
+        double winDegree = wheelPC.getRotate() % 360.0;
+        double wheelDegreePrev = 360;
+        double wheelDegree = 360;
+        double step = 360.0 / countPoints;
+        for (PieChart.Data data : wheelPC.getData()) {
+            wheelDegreePrev = wheelDegree;
+            wheelDegree = wheelDegree - data.getPieValue() * step;
+            if (winDegree >= wheelDegree && winDegree <= wheelDegreePrev) {
+                System.out.println(data.getName());
+                return data.getName();
+            }
+        }
+        return "Пук среньк Fallout 76 (ошибка)";
+    }
+
+    private double countAllPoints() {
+        double counter = 0;
         for (WheelPoint wheelPoint : mainTable.getItems()) {
             if (wheelPoint.getId() != JOKE_ID) {
                 counter = counter + wheelPoint.getMultiplier();
@@ -265,7 +552,41 @@ public class Controller {
             openInWebMenuItem.setText("Открыть на Wheeldecide");
             openInWebMenuItem.setDisable(false);
         }
+        countPoints = counter;
+        rollBtn.setVisible(counter > 0);
+        wheelArrowImg.setVisible(counter > 0);
         return counter;
+    }
+
+
+    private void calculateWheel(double count) {
+        clearWheel();
+        if (count > 0) {
+            rollBtn.setVisible(true);
+            for (WheelPoint wheelPoint : mainTable.getItems()) {
+                if (wheelPoint.getId() != JOKE_ID) {
+                    addToWheel(wheelPoint.getName(), wheelPoint.getMultiplier());
+                }
+            }
+        } else {
+            rollBtn.setVisible(false);
+        }
+    }
+
+
+    private void addToWheel(String name, double value) {
+        PieChart.Data data = new PieChart.Data(name, value);
+        wheelPC.getData().add(data);
+        Tooltip tooltip = new Tooltip(data.getName());
+        Tooltip.install(data.getNode(), tooltip);
+        data.pieValueProperty().addListener((observable, oldPieValue, newPieValue) -> {
+            tooltip.setText(data.getName());
+        });
+    }
+
+    private void clearWheel() {
+        wheelPC.getData().clear();
+        wheelPC.setRotate(0);
     }
 
     private void randomRotateMainTable() {
@@ -283,9 +604,9 @@ public class Controller {
         rt.play();
     }
 
-    private int getNewMultiplier() {
+    private double getNewMultiplier() {
         try {
-            return Integer.parseInt(newMultiplierTA.getText());
+            return Double.parseDouble(newMultiplierTA.getText());
         } catch (NumberFormatException e) {
             return 1;
         }
@@ -377,7 +698,7 @@ public class Controller {
                 if (Utils.getRandomTo(1) == 0)
                     return new WheelPoint(JOKE_ID, "Стример - писька.", 0);
                 else
-                    return new WheelPoint(JOKE_ID, String.format("Я заготовил %s фраз, все не перекрутите. (нет)",Utils.getRandomBetween(1451,5552)), 0);
+                    return new WheelPoint(JOKE_ID, String.format("Я заготовил %s фраз, все не перекрутите. (нет)", Utils.getRandomBetween(1451, 5552)), 0);
             }
             case 2:
                 return new WheelPoint(JOKE_ID, "Хватит, голова кружится.", 0);

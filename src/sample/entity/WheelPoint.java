@@ -3,9 +3,9 @@ package sample.entity;
 public class WheelPoint {
     private int id;
     private String name;
-    private int multiplier;
+    private double multiplier;
 
-    public WheelPoint(int id, String name, int multiplier){
+    public WheelPoint(int id, String name, double multiplier){
         this.id = id;
         this.name = name;
         this.multiplier = multiplier;
@@ -27,11 +27,11 @@ public class WheelPoint {
         this.name = name;
     }
 
-    public int getMultiplier() {
+    public double getMultiplier() {
         return multiplier;
     }
 
-    public void setMultiplier(int multiplier) {
+    public void setMultiplier(double multiplier) {
         this.multiplier = multiplier;
     }
 
