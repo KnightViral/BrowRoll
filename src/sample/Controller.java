@@ -599,6 +599,7 @@ public class Controller {
         wheelPC.getData().clear();
         wheelPC.setRotate(0);
         rollBtn.setText("Крутонуть");
+        mainTable.getItems().forEach(WheelPoint::generateWheelData);
     }
 
     private void randomRotateMainTable() {

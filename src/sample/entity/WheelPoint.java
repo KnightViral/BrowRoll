@@ -15,7 +15,7 @@ public class WheelPoint {
         this.id = id;
         this.name = name;
         this.multiplier = multiplier;
-        this.wheelData = new PieChart.Data(shortenWheelName(name), multiplier);
+        generateWheelData();
     }
 
     public int getId() {
@@ -68,5 +68,9 @@ public class WheelPoint {
     public void setWheelTooltip(String tooltipText){
         Tooltip tooltip = new Tooltip(tooltipText);
         Tooltip.install(wheelData.getNode(), tooltip);
+    }
+
+    public void generateWheelData(){
+        this.wheelData = new PieChart.Data(shortenWheelName(name), multiplier);
     }
 }
