@@ -2,6 +2,8 @@ package sample;
 
 import javafx.animation.RotateTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -11,10 +13,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.scene.image.Image;
 import sample.entity.*;
+import sample.screens.LoadingController;
 
 import javax.sound.sampled.AudioSystem;
 import java.io.*;
@@ -387,6 +392,16 @@ public class Controller {
     }
 
     @FXML
+    void onLoadScreenButtonPress() {
+        openLoadScreen();
+    }
+
+    @FXML
+    void onSaveCurrentTableButtonPress() {
+        SaveLoadWizard.save(mainTable, "Сохранено вручную");
+    }
+
+    @FXML
     void onOpenInBrowserButtonPress() {
         Utils.openWebpage(getPointsLink());
     }
@@ -432,14 +447,28 @@ public class Controller {
                 MyAudioTrack track = new MyAudioTrack(c.getClass().getResource("resource/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                 track.start();
                 rt.setOnFinished(event -> {
-                    rollBtn.setText(checkRollWinner());
+                    String winner = checkRollWinner();
+                    rollBtn.setText(winner);
                     track.stop();
                     MyAudioTrack trackFinish = new MyAudioTrack(c.getClass().getResource("resource/" + SoundsProvider.getSound()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                     trackFinish.start();
+                    try { //todo EXCEPTION
+                        SaveLoadWizard.save(mainTable, winner);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 });
             } catch (Exception e) {
                 e.printStackTrace();
-                rt.setOnFinished(event -> rollBtn.setText(checkRollWinner()));
+                rt.setOnFinished(event -> {
+                    String winner = checkRollWinner();
+                    rollBtn.setText(winner);
+                    try { //todo EXCEPTION
+                        SaveLoadWizard.save(mainTable, winner);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                });
             }
             rtBrow.setOnFinished(event -> browRollImg.setVisible(false));
             rt.play();
@@ -698,5 +727,20 @@ public class Controller {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
+    }
+
+    private void openLoadScreen() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("screens/loadingcontroller.fxml"));
+        Stage stage = new Stage(StageStyle.DECORATED);
+        try {
+            stage.setScene(new Scene(loader.load())
+            );
+        } catch (IOException e) {
+            //todo exceptions
+            e.printStackTrace();
+        }
+        stage.setTitle("Логи ауков");
+
+        stage.show();
     }
 }

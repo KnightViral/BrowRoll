@@ -2,6 +2,7 @@ package sample;
 
 import java.awt.*;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -61,6 +62,15 @@ public class Utils {
         for (int i = 0; i <nameLength; i++)
             pool[i] = alphaNumArray[getRandomTo(alphaNumArray.length-1)];
         return new String(pool);
+    }
+
+    public static String getLocalAppData(){
+        return System.getProperty("user.home") + "\\AppData\\Local";
+    }
+
+    public static String getFileNameWithDate(String fileName) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("_ddMMyy_HH_mm_ss");
+        return fileName + dateFormat.format(new Date());
     }
 
     public static String getRandomStringFromArray(String[] array) {

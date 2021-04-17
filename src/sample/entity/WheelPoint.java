@@ -73,4 +73,8 @@ public class WheelPoint {
     public void generateWheelData(){
         this.wheelData = new PieChart.Data(shortenWheelName(name), multiplier);
     }
+
+    public WheelPointSave save() {
+        return new WheelPointSave(this);
+    }
 }
