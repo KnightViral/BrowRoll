@@ -27,7 +27,7 @@
     -fx-background-color: transparent;
 }
 .table-view .corner {
-    -fx-background-color: transparent;
+    -fx-background-color: darkgray;
 }
 
 .table-view .virtual-flow .scroll-bar:vertical,
@@ -36,7 +36,7 @@
 .table-view .virtual-flow .scroll-bar:horizontal,
 .table-view .virtual-flow .scroll-bar:horizontal .track,
 .table-view .virtual-flow .scroll-bar:horizontal .track-background {
-    -fx-background-color: transparent;
+    -fx-background-color: darkgray;
 }
 .table-view .virtual-flow .scroll-bar:vertical .thumb{
     -fx-background-color:  #575757;
@@ -109,3 +109,10 @@
     -fx-prompt-text-fill: purple;
 }
 /*<<<<<<<<<<<<<<<<<<<<<< Text-field END >>>>>>>>>>>>>>>>>>>>>>>>*/
+
+.vboxMark {
+    -fx-background-image: url("resource/pics/mark.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
+}

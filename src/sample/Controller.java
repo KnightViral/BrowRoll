@@ -1,31 +1,23 @@
 package sample;
 
 import javafx.animation.RotateTransition;
-import javafx.beans.property.BooleanProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.scene.image.Image;
-import sample.entity.MyAudioTrack;
-import sample.entity.WheelPoint;
+import sample.entity.*;
 
 import javax.sound.sampled.AudioSystem;
-import java.awt.*;
 import java.io.*;
-import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -60,10 +52,6 @@ public class Controller {
     @FXML
     public MenuItem openInWebMenuItem;
     @FXML
-    public Label counterLabel;
-    @FXML
-    public Label counterLabelCaption;
-    @FXML
     public PieChart wheelPC;
     @FXML
     public StackPane wheelSPane;
@@ -72,38 +60,20 @@ public class Controller {
     @FXML
     public Button rollBtn;
     @FXML
-    public ImageView wheelArrowImg;
-    @FXML
     public ImageView browRollImg;
+    @FXML
+    public MenuButton timerMenu;
+    @FXML
+    public CheckMenuItem randomKekCheckBox;
+    @FXML
+    public VBox cssImageVBox;
 
     private int idCounter;
-    private final static String[] WAIFUS = new String[]{"Спидвагон", "Брови", "Гит", "Нюк", "Мэд", "Бьёрн", "Варан", "Пепе", "Ндиди"};
-    private final static String[] GAMES = new String[]{"DOTA 2", "World of Tanks", "World of Warcraft", "Stormlord", "Chakan: The Forever Man", "The Lust of Ass 2", "Fortnite", "PUBG", "COD:Warzone", "Пук среньк Fallout 76", "Kappa в чат", "Шахматы", "Крестики-нолики", "Сапер", "Косынка", "Пить Йод", "Крутить подкрутку"};
-    private final static String[] ANEK_START = new String[]{
-            "Как-то раз %s решил выбрать себе псевдоним",
-            "Нашел %s шляпу",
-            "%s так и не научился печь хлеб",
-            "Пришли как-то %s и Лупа получать зарплату",
-            "Идет %s, видит — подкова на дороге",
-            "Идет %s по пустыне",
-            "Пошел %s, купил ваксы, лицо натёр, тело натёр"
-    };
-    private final static String[] ANEK_END = new String[]{
-            "с тех под так и подписывал свои книги - %s.",
-            "а она ему как раз.",
-            "и выкинул, нахуй, c обрыва.",
-            "а %s в Щепки.",
-            "засунул себе в ухо и оглох.",
-            "и ебанулся с лошади насмерть.",
-            "схватил пузырь и убежал.",
-            "\"понятно\", сказал %s и сломал ему ногу.",
-            "%s не того стримера разбудил.",
-            "и у него отвалилась жопа."
-    };
-    private final static String[] END_SOUNDS = new String[]{"300.wav", "Deep dark fantasies.wav", "fuck you.wav", "Iam an artist.wav", "NANI.wav", "Omae wa mou shindeiru.wav", "Spank.wav", "WOO.wav", "YES I AM.wav", "YES YES YES YES YES.wav"};
-    private final static int JOKE_ID = 9999;
+
     private final static String WHEEL_LINK = "https://wheeldecide.com/?";
     private double countPoints = 0;
+
+    private MyTimer timer;
 
     @FXML
     void initialize() {
@@ -112,6 +82,14 @@ public class Controller {
         initTabPane();
         idCounter = 1;
         onRubblesTypeButtonPress();
+        initTimer();
+        randomKekCheckBox.setSelected(false);
+    }
+
+    private void initTimer(){
+        timer = new MyTimer("main", 0, 30, 0);
+        timerMenu.textProperty().bind(timer.getStringProperty());
+        timer.setAlarm(true);
     }
 
     private void initWheel() {
@@ -124,10 +102,8 @@ public class Controller {
     }
 
     private void initWheelTab() {
-        wheelArrowImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/mark.png"))));
-        wheelArrowImg.fitWidthProperty().bind(wheelSPane.widthProperty());
-        wheelArrowImg.fitHeightProperty().bind(wheelSPane.heightProperty());
-        wheelArrowImg.setSmooth(false);
+        cssImageVBox.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        cssImageVBox.getStyleClass().add("vboxMark");
         browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/browFatRoll.png"))));
     }
 
@@ -155,7 +131,7 @@ public class Controller {
         nameColumn.setCellFactory(
                 TextFieldTableCell.forTableColumn());
         nameColumn.setOnEditCommit(event -> {
-                    changeTableElementName(event.getRowValue(), event.getNewValue());
+            event.getRowValue().setName(event.getNewValue());
                 }
         );
         if (idColumn.isVisible())
@@ -187,8 +163,7 @@ public class Controller {
                         } else {
                             btn.setOnAction(event -> {
                                 WheelPoint wheelPoint = mainTable.getItems().get(getIndex());
-                                wheelPoint.addMultiplier();
-                                changeTableElementMultiplier(wheelPoint, wheelPoint.getMultiplier());
+                                wheelPoint.setMultiplier(wheelPoint.getMultiplier() + 1);
                                 mainTable.refresh();
                                 countAllPoints();
                             });
@@ -221,8 +196,7 @@ public class Controller {
                         } else {
                             btn.setOnAction(event -> {
                                 WheelPoint wheelPoint = mainTable.getItems().get(getIndex());
-                                wheelPoint.decreaseMultiplier();
-                                changeTableElementMultiplier(wheelPoint, wheelPoint.getMultiplier());
+                                wheelPoint.setMultiplier(wheelPoint.getMultiplier() - 1);
                                 mainTable.refresh();
                                 countAllPoints();
                             });
@@ -297,7 +271,7 @@ public class Controller {
                                         e2.printStackTrace();
                                     }
                                 }
-                                changeTableElementMultiplier(wheelPoint, wheelPoint.getMultiplier() + number);
+                                wheelPoint.setMultiplier(wheelPoint.getMultiplier() + number);
                                 mainTable.refresh();
                                 countAllPoints();
                                 sort();
@@ -330,7 +304,7 @@ public class Controller {
                                 mainTable.getItems().size() > getIndex() &&
                                 countPoints > 0 &&
                                 mainTable.getItems().get(getIndex()).getMultiplier() > 0 &&
-                                mainTable.getItems().get(getIndex()).getId() != JOKE_ID
+                                mainTable.getItems().get(getIndex()).getId() != JokeGenerator.getJokeId()
                         )
                             setText(String.format("%.1f", (double) mainTable.getItems().get(getIndex()).getMultiplier() / countPoints * 100));
                         else
@@ -342,7 +316,7 @@ public class Controller {
     }
 
     private void addToTable(WheelPoint wheelPoint) {
-        if (wheelPoint.getId() != JOKE_ID) {
+        if (wheelPoint.getId() != JokeGenerator.getJokeId()) {
             boolean unique = true;
             WheelPoint oldElement = null;
             for (WheelPoint item : mainTable.getItems()) {
@@ -354,9 +328,9 @@ public class Controller {
             }
             if (unique) {
                 mainTable.getItems().add(wheelPoint);
-                addToWheel(wheelPoint.getName(), wheelPoint.getMultiplier());
+                addToWheel(wheelPoint);
             } else
-                changeTableElementMultiplier(oldElement, oldElement.getMultiplier() + wheelPoint.getMultiplier());
+                oldElement.setMultiplier(oldElement.getMultiplier() + wheelPoint.getMultiplier());
         } else {
             mainTable.getItems().add(wheelPoint);
         }
@@ -364,40 +338,21 @@ public class Controller {
     }
 
     private void removeFromTable(WheelPoint wheelPoint) {
-        if (wheelPoint.getId() != JOKE_ID) {
-            PieChart.Data toRemove = null;
-            for (PieChart.Data data : wheelPC.getData()) {
-                if (wheelPoint.getName().equals(data.getName()))
-                    toRemove = data;
-            }
-            wheelPC.getData().remove(toRemove);
+        if (wheelPoint.getId() != JokeGenerator.getJokeId()) {
+            wheelPC.getData().remove(wheelPoint.getWheelData());
+            if (wheelPC.getData().size() == 0)
+                clearWheel();
             //TODO исключение если ничего не нашли
         }
         mainTable.getItems().remove(wheelPoint);
         mainTable.refresh();
     }
 
-    private void changeTableElementName(WheelPoint wheelPoint, String newName) {
-        String oldName = wheelPoint.getName();
-        wheelPoint.setName(newName);
-        if (wheelPoint.getId() != JOKE_ID) {
-            wheelPC.getData().forEach(data -> {
-                if (data.getName().equals(oldName))
-                    data.setName(newName);
-            });
-        }
-        mainTable.refresh();
-    }
-
-    private void changeTableElementMultiplier(WheelPoint wheelPoint, double value) {
-        wheelPoint.setMultiplier(value);
-        if (wheelPoint.getId() != JOKE_ID) {
-            wheelPC.getData().forEach(data -> {
-                if (data.getName().equals(wheelPoint.getName()))
-                    data.setPieValue(value);
-            });
-        }
-        mainTable.refresh();
+    private void clearTable() {
+        mainTable.getItems().clear();
+        mainTable.setRotate(0);
+        countAllPoints();
+        clearWheel();
     }
 
     @FXML
@@ -410,12 +365,18 @@ public class Controller {
             sort();
         }
         countAllPoints();
+        if (randomKekCheckBox.isSelected()){
+            if (Utils.getRandomTo(10) > 8){
+                onKekButtonPress();
+            }
+        }
     }
 
     @FXML
     void onKekButtonPress() {
-        addToTable(getJoke());
-        randomRotateMainTable();
+        addToTable(JokeGenerator.getJoke(mainTable));
+        if (tabPane.getSelectionModel().getSelectedItem().getText().equals("Таблица"))
+            randomRotateMainTable();
         sort();
         countAllPoints();
     }
@@ -427,7 +388,7 @@ public class Controller {
 
     @FXML
     void onOpenInBrowserButtonPress() {
-        openWebpage(getPointsLink());
+        Utils.openWebpage(getPointsLink());
     }
 
     @FXML
@@ -448,7 +409,7 @@ public class Controller {
     @FXML
     void onTestSoundButtonPress() {
         try {
-            MyAudioTrack trackFinish = new MyAudioTrack(this.getClass().getResource("resource/" + getRandomStringFromArray(END_SOUNDS)), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+            MyAudioTrack trackFinish = new MyAudioTrack(this.getClass().getResource("resource/" + SoundsProvider.getSound()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
             trackFinish.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -473,7 +434,7 @@ public class Controller {
                 rt.setOnFinished(event -> {
                     rollBtn.setText(checkRollWinner());
                     track.stop();
-                    MyAudioTrack trackFinish = new MyAudioTrack(c.getClass().getResource("resource/" + getRandomStringFromArray(END_SOUNDS)), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                    MyAudioTrack trackFinish = new MyAudioTrack(c.getClass().getResource("resource/" + SoundsProvider.getSound()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                     trackFinish.start();
                 });
             } catch (Exception e) {
@@ -491,8 +452,6 @@ public class Controller {
         addColumn.setVisible(true);
         decreaseColumn.setVisible(true);
         addNumberColumn.setVisible(false);
-        counterLabelCaption.setVisible(true);
-        counterLabel.setVisible(true);
         newMultiplierTA.setPromptText("Множитель");
         if (idColumn.isVisible())
             nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.65));
@@ -505,13 +464,60 @@ public class Controller {
         addColumn.setVisible(false);
         decreaseColumn.setVisible(false);
         addNumberColumn.setVisible(true);
-        counterLabelCaption.setVisible(false);
-        counterLabel.setVisible(false);
         newMultiplierTA.setPromptText("Сумма");
         if (idColumn.isVisible())
             nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.65));
         else
             nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.70));
+    }
+
+    @FXML
+    void onAnimeButtonPress() {
+        newNameTA.setText(newNameTA.getText() + " (Аниме)");
+    }
+
+    @FXML
+    void onMovieButtonPress() {
+        newNameTA.setText(newNameTA.getText() + " (Фильм)");
+    }
+
+    @FXML
+    void onGameButtonPress() {
+        newNameTA.setText(newNameTA.getText() + " (Игра)");
+    }
+
+    @FXML
+    void onClearTableButtonPress() {
+        clearTable();
+    }
+
+    @FXML
+    void onSetTimer30ButtonPress() {
+        setTimerTo30();
+    }
+
+    @FXML
+    void onStopTimerButtonPress() {
+        timer.stop();
+    }
+
+    @FXML
+    void onPlayTimer30ButtonPress() {
+        timer.start();
+    }
+
+    @FXML
+    void onAdd2Timer30ButtonPress() {
+        timer.addSeconds(2 * 60);
+    }
+
+    @FXML
+    void onRemove2Timer30ButtonPress() {
+        timer.addSeconds(-2 * 60);
+    }
+
+    private void setTimerTo30(){
+        timer.setTime(0,30,0);
     }
 
     private void sort() {
@@ -530,8 +536,18 @@ public class Controller {
             wheelDegreePrev = wheelDegree;
             wheelDegree = wheelDegree - data.getPieValue() * step;
             if (winDegree >= wheelDegree && winDegree <= wheelDegreePrev) {
-                System.out.println(data.getName());
-                return data.getName();
+                String res = findWheelPointNameByData(data);
+                System.out.println(res);
+                return res;
+            }
+        }
+        return "Пук среньк Fallout 76 (ошибка)";
+    }
+
+    private String findWheelPointNameByData(PieChart.Data data){
+        for (WheelPoint wheelPoint : mainTable.getItems()) {
+            if (wheelPoint.getWheelData().equals(data)){
+                return wheelPoint.getName();
             }
         }
         return "Пук среньк Fallout 76 (ошибка)";
@@ -540,11 +556,10 @@ public class Controller {
     private double countAllPoints() {
         double counter = 0;
         for (WheelPoint wheelPoint : mainTable.getItems()) {
-            if (wheelPoint.getId() != JOKE_ID) {
+            if (wheelPoint.getId() != JokeGenerator.getJokeId()) {
                 counter = counter + wheelPoint.getMultiplier();
             }
         }
-        counterLabel.setText(String.valueOf(counter));
         if (counter > 100) {
             openInWebMenuItem.setText("Слишком много пунктов. Wheeldecide принимает максимум 100");
             openInWebMenuItem.setDisable(true);
@@ -554,7 +569,7 @@ public class Controller {
         }
         countPoints = counter;
         rollBtn.setVisible(counter > 0);
-        wheelArrowImg.setVisible(counter > 0);
+        cssImageVBox.setVisible(counter > 0);
         return counter;
     }
 
@@ -564,8 +579,8 @@ public class Controller {
         if (count > 0) {
             rollBtn.setVisible(true);
             for (WheelPoint wheelPoint : mainTable.getItems()) {
-                if (wheelPoint.getId() != JOKE_ID) {
-                    addToWheel(wheelPoint.getName(), wheelPoint.getMultiplier());
+                if (wheelPoint.getId() != JokeGenerator.getJokeId()) {
+                    addToWheel(wheelPoint);
                 }
             }
         } else {
@@ -574,19 +589,16 @@ public class Controller {
     }
 
 
-    private void addToWheel(String name, double value) {
-        PieChart.Data data = new PieChart.Data(name, value);
-        wheelPC.getData().add(data);
-        Tooltip tooltip = new Tooltip(data.getName());
-        Tooltip.install(data.getNode(), tooltip);
-        data.pieValueProperty().addListener((observable, oldPieValue, newPieValue) -> {
-            tooltip.setText(data.getName());
-        });
+    private void addToWheel(WheelPoint wheelPoint) {
+        wheelPC.getData().add(wheelPoint.getWheelData());
+        wheelPoint.updateWheelTooltip();
     }
 
     private void clearWheel() {
+        browRollImg.setRotate(0);
         wheelPC.getData().clear();
         wheelPC.setRotate(0);
+        rollBtn.setText("Крутонуть");
     }
 
     private void randomRotateMainTable() {
@@ -615,7 +627,7 @@ public class Controller {
     private String getPointsString() {
         StringBuilder sb = new StringBuilder();
         mainTable.getItems().forEach(wheelPoint -> {
-            if (wheelPoint.getId() != JOKE_ID) {
+            if (wheelPoint.getId() != JokeGenerator.getJokeId()) {
                 for (int i = 0; i < wheelPoint.getMultiplier(); i++) {
                     if (sb.length() != 0)
                         sb.append("\n");
@@ -638,7 +650,7 @@ public class Controller {
             int counter = 1;
             List<String> wheelPoints = new ArrayList<>();
             for (WheelPoint wheelPoint : mainTable.getItems()) {
-                if (wheelPoint.getId() != JOKE_ID) {
+                if (wheelPoint.getId() != JokeGenerator.getJokeId()) {
                     for (int i = 0; i < wheelPoint.getMultiplier(); i++) {
                         wheelPoints.add(wheelPoint.getName());
                     }
@@ -686,108 +698,4 @@ public class Controller {
             e.printStackTrace();
         }
     }
-
-    private WheelPoint getJoke() {
-        int rnd = Utils.getRandomTo(12);
-        if (mainTable.getItems().size() > 0)
-            rnd++;
-        switch (rnd) {
-            case 0:
-                return new WheelPoint(JOKE_ID, "Анус себе подкрути, пес. Keepo", 0);
-            case 1: {
-                if (Utils.getRandomTo(1) == 0)
-                    return new WheelPoint(JOKE_ID, "Стример - писька.", 0);
-                else
-                    return new WheelPoint(JOKE_ID, String.format("Я заготовил %s фраз, все не перекрутите. (нет)", Utils.getRandomBetween(1451, 5552)), 0);
-            }
-            case 2:
-                return new WheelPoint(JOKE_ID, "Хватит, голова кружится.", 0);
-            case 3: {
-                if (Utils.getRandomTo(1) == 0)
-                    return new WheelPoint(JOKE_ID, "Анимешники не человеки.", 0);
-                else
-                    return new WheelPoint(JOKE_ID, "Анимешники - сверхчеловеки.", 0);
-            }
-            case 4: {
-                if (Utils.getRandomTo(1) == 0)
-                    return new WheelPoint(JOKE_ID, "Ваше очко уходит в зрительный зал.", 0);
-                else
-                    return new WheelPoint(JOKE_ID, "Зрительный зал уходит в ваше очко.", 0);
-            }
-            case 5:
-                return new WheelPoint(JOKE_ID, String.format("%s - лучшая вайфу. <3", getWaifu()), 0);
-            case 6:
-                return new WheelPoint(JOKE_ID, String.format("%s - лучшая игра.", getGame()), 0);
-            case 7:
-                return new WheelPoint(JOKE_ID, getRandomGameName(), 999);
-            case 8:
-                return new WheelPoint(JOKE_ID, "Осуждаю", 0);
-            case 9:
-                return new WheelPoint(JOKE_ID, "Кто спросил:\"Что делает подкрутка?\", тот выигрывает таймач.", 0);
-            case 10:
-                return new WheelPoint(JOKE_ID, "Ндиди", 0);
-            case 11:
-                return new WheelPoint(JOKE_ID, "+игра на все платформы", 0);
-            case 12:
-                return new WheelPoint(JOKE_ID, getAnek(), 0);
-            case 13:
-                return new WheelPoint(JOKE_ID, String.format("%s - ну и говно, кто это заказал?", getRandomNameFromTable()), -999);
-            default:
-                return new WheelPoint(JOKE_ID, getRandomGameName(), 999);
-        }
-    }
-
-    private String getRandomStringFromArray(String[] array) {
-        return array[Utils.getRandomTo(array.length - 1)];
-    }
-
-    private String getWaifu() {
-        return getRandomStringFromArray(WAIFUS);
-    }
-
-    private String getGame() {
-        return getRandomStringFromArray(GAMES);
-    }
-
-    private String getStartAnek() {
-        return getRandomStringFromArray(ANEK_START);
-    }
-
-    private String getEndAnek() {
-        return getRandomStringFromArray(ANEK_END);
-    }
-
-    private String getAnek() {
-        return String.format(getStartAnek(), getWaifu()) + ", " + String.format(getEndAnek(), getWaifu());
-    }
-
-    private String getRandomNameFromTable() {
-        return mainTable.getItems().get(Utils.getRandomTo(mainTable.getItems().size() - 1)).getName();
-    }
-
-    private String getRandomGameName() {
-        if (mainTable.getItems().size() == 0) {
-            return getGame();
-        } else {
-            if (Utils.getRandomTo(1) == 0)
-                return getGame();
-            else
-                return getRandomNameFromTable();
-        }
-    }
-
-    //TODO вынести в ютилс
-    private static boolean openWebpage(String link) {
-        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-            try {
-                desktop.browse(new URI(link));
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
-
 }

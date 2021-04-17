@@ -1,5 +1,7 @@
 package sample;
 
+import java.awt.*;
+import java.net.URI;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -59,5 +61,22 @@ public class Utils {
         for (int i = 0; i <nameLength; i++)
             pool[i] = alphaNumArray[getRandomTo(alphaNumArray.length-1)];
         return new String(pool);
+    }
+
+    public static String getRandomStringFromArray(String[] array) {
+        return array[Utils.getRandomTo(array.length - 1)];
+    }
+
+    public static boolean openWebpage(String link) {
+        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(new URI(link));
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 }
