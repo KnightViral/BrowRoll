@@ -27,7 +27,7 @@ public class HistoryController {
     private void initTable() {
         initNameColumn();
         initMultiplierColumn();
-        mainTable.getStylesheets().add(getClass().getResource("../style.css").toExternalForm());
+        mainTable.getStylesheets().add(getClass().getResource("/sample/style.css").toExternalForm());
         multiplierColumn.setSortType(TableColumn.SortType.DESCENDING);
         mainTable.getSortOrder().clear();
         mainTable.getSortOrder().add(multiplierColumn);

@@ -48,7 +48,7 @@ public class MyTimer implements Serializable {
                 if ((Integer) newValue <= 0) {
                     if (alarm) {
                         try {
-                            MyAudioTrack track = new MyAudioTrack(getClass().getResource("../resource/" + alarmFileName), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                            MyAudioTrack track = new MyAudioTrack(getClass().getResource("/sample/resource/" + alarmFileName), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                             track.start();
                         } catch (Exception e) {
                             //todo exception
@@ -81,7 +81,7 @@ public class MyTimer implements Serializable {
                         (long) duration.toMinutes() % 60,
                         (long) duration.toSeconds() % 60);
             } else {
-                return "end";
+                return "BrowFat";
             }
         }, timeSeconds));
     }

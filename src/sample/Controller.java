@@ -19,7 +19,6 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.scene.image.Image;
 import sample.entity.*;
-import sample.screens.LoadingController;
 
 import javax.sound.sampled.AudioSystem;
 import java.io.*;

@@ -40,7 +40,7 @@ public class LoadingController {
         initWinnerNameColumn();
         initDateColumn();
         initLoadBtnColumn();
-        mainTable.getStylesheets().add(getClass().getResource("../style.css").toExternalForm());
+        mainTable.getStylesheets().add(getClass().getResource("/sample/style.css").toExternalForm());
         dateColumn.setSortType(TableColumn.SortType.DESCENDING);
         mainTable.getSortOrder().clear();
         mainTable.getSortOrder().add(dateColumn);
@@ -75,7 +75,7 @@ public class LoadingController {
                         } else {
                             btn.setOnAction(event -> {
                                 RollSave save = mainTable.getItems().get(getIndex());
-                                FXMLLoader loader = new FXMLLoader(getClass().getResource("historycontroller.fxml"));
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/screens/historycontroller.fxml"));
                                 Stage stage = new Stage(StageStyle.DECORATED);
                                 try {
                                     stage.setScene(new Scene(loader.load())
