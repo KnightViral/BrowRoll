@@ -31,7 +31,7 @@
                                 <MenuItem mnemonicParsing="false" onAction="#onLoadScreenButtonPress" text="Авто Энкон" />
                                 <MenuItem mnemonicParsing="false" onAction="#onSaveCurrentTableButtonPress" text="Сохранить текущую таблицу" />
                                 <MenuItem mnemonicParsing="false" onAction="#onWriteFileButtonPress" text="Запись вариантов в файл" />
-                                <MenuItem fx:id="openInWebMenuItem" mnemonicParsing="false" onAction="#onOpenInBrowserButtonPress" text="Открыть на Wheeldecide" />
+                                <MenuItem fx:id="openInWebMenuItem" mnemonicParsing="false" onAction="#onOpenInBrowserButtonPress" text="Открыть на Wheeldecide" visible="false" />
                                 <MenuItem fx:id="sortBtn" mnemonicParsing="false" onAction="#onSortButtonPress" text="Сортировать" />
                                 <MenuItem mnemonicParsing="false" onAction="#onRecountWheelButtonPress" text="Пересобрать колесо" />
                                 <MenuItem mnemonicParsing="false" onAction="#onHideShowWheelNamesButtonPress" text="Скрыть/Показать подписи колеса" />
@@ -51,6 +51,7 @@
                                 <MenuItem mnemonicParsing="false" onAction="#onRemove2Timer30ButtonPress" style="-fx-font-weight: bold;" text="Убрать 2 минуты" />
                             </items>
                         </MenuButton>
+                  <CheckBox fx:id="regimeCheckBox" mnemonicParsing="false" onAction="#onSwitchRegime" style="-fx-font-weight: bold;" text="Дуэль" textFill="lightgray"/>
                     </items>
                 </ToolBar>
             </children>

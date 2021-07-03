@@ -10,6 +10,7 @@
             <TableColumn fx:id="winnerNameColumn" editable="false" prefWidth="100.0" resizable="false" text="Победитель" />
             <TableColumn fx:id="dateColumn" editable="false" prefWidth="100.0" resizable="false" text="Дата" />
             <TableColumn fx:id="loadBtnColumn" editable="false" prefWidth="100.0" resizable="false" />
+            <TableColumn fx:id="fileBtnColumn" editable="false" prefWidth="100.0" resizable="false" />
         </columns>
       </TableView>
    </children>

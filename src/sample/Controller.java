@@ -71,11 +71,13 @@ public class Controller {
     public CheckMenuItem randomKekCheckBox;
     @FXML
     public VBox cssImageVBox;
+    @FXML
+    public CheckBox regimeCheckBox;
 
     private int idCounter;
 
     private final static String WHEEL_LINK = "https://wheeldecide.com/?";
-    private double countPoints = 0;
+    private double countMultiplier = 0;
 
     private MyTimer timer;
 
@@ -169,7 +171,7 @@ public class Controller {
                                 WheelPoint wheelPoint = mainTable.getItems().get(getIndex());
                                 wheelPoint.setMultiplier(wheelPoint.getMultiplier() + 1);
                                 mainTable.refresh();
-                                countAllPoints();
+                                countAllMultipliers();
                             });
                             btn.setPrefHeight(21);
                             btn.setMinHeight(21);
@@ -202,7 +204,7 @@ public class Controller {
                                 WheelPoint wheelPoint = mainTable.getItems().get(getIndex());
                                 wheelPoint.setMultiplier(wheelPoint.getMultiplier() - 1);
                                 mainTable.refresh();
-                                countAllPoints();
+                                countAllMultipliers();
                             });
                             btn.setPrefHeight(21);
                             btn.setMinHeight(21);
@@ -232,7 +234,7 @@ public class Controller {
                         } else {
                             btn.setOnAction(event -> {
                                 removeFromTable(mainTable.getItems().get(getIndex()));
-                                countAllPoints();
+                                countAllMultipliers();
                             });
                             btn.setPrefHeight(21);
                             btn.setMinHeight(21);
@@ -277,7 +279,7 @@ public class Controller {
                                 }
                                 wheelPoint.setMultiplier(wheelPoint.getMultiplier() + number);
                                 mainTable.refresh();
-                                countAllPoints();
+                                countAllMultipliers();
                                 sort();
                             });
                             btn.setPrefHeight(21);
@@ -306,11 +308,11 @@ public class Controller {
                         super.updateItem(item, empty);
                         if (getIndex() >= 0 &&
                                 mainTable.getItems().size() > getIndex() &&
-                                countPoints > 0 &&
+                                countMultiplier > 0 &&
                                 mainTable.getItems().get(getIndex()).getMultiplier() > 0 &&
                                 mainTable.getItems().get(getIndex()).getId() != JokeGenerator.getJokeId()
                         )
-                            setText(String.format("%.1f", (double) mainTable.getItems().get(getIndex()).getMultiplier() / countPoints * 100));
+                            setText(String.format("%.1f", (double) mainTable.getItems().get(getIndex()).getMultiplier() / countMultiplier * 100));
                         else
                             setText(null);
                     }
@@ -355,20 +357,24 @@ public class Controller {
     private void clearTable() {
         mainTable.getItems().clear();
         mainTable.setRotate(0);
-        countAllPoints();
+        countAllMultipliers();
         clearWheel();
     }
 
     @FXML
     void onAddButtonPress() {
         if (!newNameTA.getText().isEmpty()) {
-            addToTable(new WheelPoint(idCounter, newNameTA.getText(), getNewMultiplier()));
+            if (duelRegime) {
+                addToTableDuel(new WheelPoint(idCounter, newNameTA.getText(), getNewMultiplier()));
+            } else {
+                addToTable(new WheelPoint(idCounter, newNameTA.getText(), getNewMultiplier()));
+            }
             idCounter++;
             newNameTA.clear();
             newMultiplierTA.clear();
             sort();
         }
-        countAllPoints();
+        countAllMultipliers();
         if (randomKekCheckBox.isSelected()){
             if (Utils.getRandomTo(10) > 8){
                 onKekButtonPress();
@@ -378,11 +384,15 @@ public class Controller {
 
     @FXML
     void onKekButtonPress() {
-        addToTable(JokeGenerator.getJoke(mainTable));
+        if (duelRegime) {
+            addToTableDuel(JokeGenerator.getJoke(mainTable));
+        } else {
+            addToTable(JokeGenerator.getJoke(mainTable));
+        }
         if (tabPane.getSelectionModel().getSelectedItem().getText().equals("Таблица"))
             randomRotateMainTable();
         sort();
-        countAllPoints();
+        countAllMultipliers();
     }
 
     @FXML
@@ -412,7 +422,11 @@ public class Controller {
 
     @FXML
     void onRecountWheelButtonPress() {
-        calculateWheel(countAllPoints());
+        if (duelRegime) {
+            calculateWheelDuel(countAllWheelPoints());
+        } else {
+            calculateWheel(countAllMultipliers());
+        }
     }
 
     @FXML
@@ -432,6 +446,14 @@ public class Controller {
 
     @FXML
     void onRollButtonPress() {
+        if (duelRegime) {
+            makeRollDuel();
+        } else {
+            makeRoll();
+        }
+    }
+
+    private void makeRoll() {
         if (!wheelPC.getData().isEmpty()) {
             rollBtn.setText("Крутонуть");
             wheelPC.setRotate(0);
@@ -446,13 +468,14 @@ public class Controller {
                 MyAudioTrack track = new MyAudioTrack(c.getClass().getResource("resource/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                 track.start();
                 rt.setOnFinished(event -> {
-                    String winner = checkRollWinner();
-                    rollBtn.setText(winner);
+                    WheelPoint winner = checkRollWinner();
+                    String winnerName = getWheelPointNameNotNull(winner);
+                    rollBtn.setText(winnerName);
                     track.stop();
                     MyAudioTrack trackFinish = new MyAudioTrack(c.getClass().getResource("resource/" + SoundsProvider.getSound()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                     trackFinish.start();
                     try { //todo EXCEPTION
-                        SaveLoadWizard.save(mainTable, winner);
+                        SaveLoadWizard.save(mainTable, winnerName);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -460,10 +483,11 @@ public class Controller {
             } catch (Exception e) {
                 e.printStackTrace();
                 rt.setOnFinished(event -> {
-                    String winner = checkRollWinner();
-                    rollBtn.setText(winner);
+                    WheelPoint winner = checkRollWinner();
+                    String winnerName = getWheelPointNameNotNull(winner);
+                    rollBtn.setText(winnerName);
                     try { //todo EXCEPTION
-                        SaveLoadWizard.save(mainTable, winner);
+                        SaveLoadWizard.save(mainTable, winnerName);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -473,6 +497,13 @@ public class Controller {
             rt.play();
             rtBrow.play();
         }
+    }
+
+    private String getWheelPointNameNotNull(WheelPoint wheelPoint) {
+        if (wheelPoint != null){
+            return wheelPoint.getName();
+        }
+        return "Пук среньк Fallout 76 (ошибка)";
     }
 
     @FXML
@@ -555,33 +586,43 @@ public class Controller {
         mainTable.sort();
     }
 
-    private String checkRollWinner() {
+    private WheelPoint checkRollWinner() {
         double winDegree = wheelPC.getRotate() % 360.0;
         double wheelDegreePrev = 360;
         double wheelDegree = 360;
-        double step = 360.0 / countPoints;
+        double step = 360.0 / getMultiplierFromWheel();
         for (PieChart.Data data : wheelPC.getData()) {
             wheelDegreePrev = wheelDegree;
             wheelDegree = wheelDegree - data.getPieValue() * step;
             if (winDegree >= wheelDegree && winDegree <= wheelDegreePrev) {
-                String res = findWheelPointNameByData(data);
-                System.out.println(res);
+                WheelPoint res = findWheelPointByData(data);
+                if (res != null){
+                    System.out.println(res.getName());
+                }
                 return res;
             }
         }
-        return "Пук среньк Fallout 76 (ошибка)";
+        return null;
     }
 
-    private String findWheelPointNameByData(PieChart.Data data){
+    private double getMultiplierFromWheel(){
+        double res = 0;
+        for (PieChart.Data data : wheelPC.getData()) {
+            res = res + data.getPieValue();
+        }
+        return res;
+    }
+
+    private WheelPoint findWheelPointByData(PieChart.Data data){
         for (WheelPoint wheelPoint : mainTable.getItems()) {
             if (wheelPoint.getWheelData().equals(data)){
-                return wheelPoint.getName();
+                return wheelPoint;
             }
         }
-        return "Пук среньк Fallout 76 (ошибка)";
+        return null;
     }
 
-    private double countAllPoints() {
+    private double countAllMultipliers() {
         double counter = 0;
         for (WheelPoint wheelPoint : mainTable.getItems()) {
             if (wheelPoint.getId() != JokeGenerator.getJokeId()) {
@@ -595,9 +636,19 @@ public class Controller {
             openInWebMenuItem.setText("Открыть на Wheeldecide");
             openInWebMenuItem.setDisable(false);
         }
-        countPoints = counter;
+        countMultiplier = counter;
         rollBtn.setVisible(counter > 0);
         cssImageVBox.setVisible(counter > 0);
+        return counter;
+    }
+
+    private int countAllWheelPoints() {
+        int counter = 0;
+        for (WheelPoint wheelPoint : mainTable.getItems()) {
+            if (wheelPoint.getId() != JokeGenerator.getJokeId()) {
+                counter++;
+            }
+        }
         return counter;
     }
 
@@ -741,5 +792,208 @@ public class Controller {
         stage.setTitle("Логи ауков");
 
         stage.show();
+    }
+
+    //=============================================================================================================================================================
+
+    private boolean duelRegime = false;
+    private boolean freezeWheel = false;
+    private boolean needsRecalculation = false;
+    private boolean needsEating = false; //todo needs wizard for this
+    private WheelPoint winner = null;
+    private MyAudioTrack music = null;
+
+    @FXML
+    void onSwitchRegime() {
+        switchRegimes(regimeCheckBox.isSelected());
+    }
+
+    private void switchRegimes(boolean duelRegime){
+        this.duelRegime = duelRegime;
+        needsRecalculation = false;
+        needsEating = false;
+        winner = null;
+        if (music == null) {
+            music = new MyAudioTrack(this.getClass().getResource("resource/" + SoundsProvider.getMKMusic()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+        }
+        if (duelRegime) {
+            SaveLoadWizard.save(mainTable, "Включен режим дуэли. Автосохранение.");
+            browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/browBlameRoll.png"))));
+            calculateWheelDuel(countAllWheelPoints());
+            MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("resource/" + SoundsProvider.getMKChoose()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+            track.start(0);
+            music.start(0, true);
+        } else {
+            browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/browFatRoll.png"))));
+            calculateWheel(countAllMultipliers());
+            MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("resource/" + SoundsProvider.getSlap()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+            track.start();
+            music.close();
+        }
+    }
+
+    private void calculateWheelDuel(double count) {
+        clearWheel();
+        rollBtn.setVisible(false);
+        cssImageVBox.setVisible(false);
+
+        if (count >= 2) {
+            rollBtn.setVisible(true);
+            cssImageVBox.setVisible(true);
+            List<WheelPoint> wheelPoints = new ArrayList<>(
+                    mainTable.getItems()
+                    .filtered(wheelPoint -> wheelPoint.getId() != JokeGenerator.getJokeId())
+            );
+            //wheelPoints.sort(Comparator.comparingDouble(WheelPoint::getMultiplier));
+            wheelPoints.sort(new Comparator<WheelPoint>() {
+                @Override
+                public int compare(WheelPoint o1, WheelPoint o2) {
+                    if (o1.getMultiplier() < o2.getMultiplier())
+                        return -1;
+                    if (o1.getMultiplier() > o2.getMultiplier())
+                        return 1;
+
+                    long thisBits    = Double.doubleToLongBits(o1.getMultiplier());
+                    long anotherBits = Double.doubleToLongBits(o2.getMultiplier());
+
+                    return (thisBits == anotherBits ?  -1 :
+                            (thisBits < anotherBits ? -1 :
+                                    1));
+                }
+            });
+            wheelPoints.sort(Comparator.comparingDouble(WheelPoint::getMultiplier));
+            addToWheel(wheelPoints.get(0));
+            addToWheel(wheelPoints.get(1));
+        } else {
+            if (count == 1) {
+                mainTable.getItems().forEach(this::addToWheel);
+            }
+        }
+    }
+
+    private void makeRollDuel() {
+        if (!freezeWheel) {
+            if (needsRecalculation || needsEating) {
+                if (needsEating) {
+                    eatingAnimation(this.winner);
+                    sort();
+                } else {
+                    calculateWheelDuel(countAllWheelPoints());
+                    needsRecalculation = false;
+                }
+            } else {
+                if (!wheelPC.getData().isEmpty()) {
+                    rollBtn.setText("Крутонуть");
+                    wheelPC.setRotate(0);
+                    int timeSq = countAllWheelPoints() - 1;
+                    double time = 15000.0;
+                    int rotateFrom = 18000;
+                    int rotateTo = 36000;
+                    int rotateFromBrow = 720;
+                    int rotateToBrow = 1920;
+                    if (timeSq >= 0) {
+                        if (time / timeSq < 3000) {
+                            timeSq = 5;
+                        }
+                        time = time / timeSq;
+                        rotateFrom = rotateFrom / timeSq;
+                        rotateTo = rotateTo / timeSq;
+                        rotateFromBrow = rotateFromBrow / timeSq;
+                        rotateToBrow = rotateToBrow / timeSq;
+                    }
+                    RotateTransition rt = new RotateTransition(Duration.millis(time), wheelPC);
+                    rt.setByAngle(Utils.getRandomBetween(rotateFrom, rotateTo));
+                    browRollImg.setRotate(0);
+                    browRollImg.setVisible(true);
+                    RotateTransition rtBrow = new RotateTransition(Duration.millis(time), browRollImg);
+                    rtBrow.setByAngle(-Utils.getRandomBetween(rotateFromBrow, rotateToBrow));
+                    Controller c = this;
+                    try {
+                        MyAudioTrack track = new MyAudioTrack(c.getClass().getResource("resource/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                        track.start();
+                        rt.setOnFinished(event -> {
+                            WheelPoint winner = checkRollWinner();
+                            String winnerName = getWheelPointNameNotNull(winner);
+                            rollBtn.setText(winnerName);
+                            track.stop();
+                            MyAudioTrack trackFinish = new MyAudioTrack(c.getClass().getResource("resource/" + SoundsProvider.getMKHit()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                            trackFinish.start(0);
+                            needsEating = true;
+                            this.winner = winner;
+
+                            try { //todo EXCEPTION
+                                SaveLoadWizard.save(mainTable, winnerName);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        rt.setOnFinished(event -> {
+                            WheelPoint winner = checkRollWinner();
+                            String winnerName = getWheelPointNameNotNull(winner);
+                            rollBtn.setText(winnerName);
+                            needsEating = true;
+                            this.winner = winner;
+
+                            try { //todo EXCEPTION
+                                SaveLoadWizard.save(mainTable, winnerName);
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+                            }
+                        });
+                    }
+                    rtBrow.setOnFinished(event -> browRollImg.setVisible(false));
+                    rt.play();
+                    rtBrow.play();
+                }
+            }
+        }
+    }
+
+    private void eatingAnimation(WheelPoint winner) {
+        freezeWheel = true;
+        for (PieChart.Data data : wheelPC.getData()) {
+            if (!data.equals(winner.getWheelData())) {
+                WheelPoint loser = findWheelPointByData(data);
+                if (loser != null) {
+                    winner.setMultiplier(winner.getMultiplier() + loser.getMultiplier());
+                    removeFromTable(loser);
+                    MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("resource/" + SoundsProvider.getMKEat()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                    track.start(0);
+                    if (countAllWheelPoints() == 1) {
+                        MyAudioTrack winTrack = new MyAudioTrack(this.getClass().getResource("resource/" + SoundsProvider.getMKIWin()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                        winTrack.start(0);
+                    }
+                    break;
+                }
+            }
+        }
+        needsEating = false;
+        needsRecalculation = true;
+        freezeWheel = false;
+    }
+
+
+    private void addToTableDuel(WheelPoint wheelPoint) {
+        if (wheelPoint.getId() != JokeGenerator.getJokeId()) {
+            boolean unique = true;
+            WheelPoint oldElement = null;
+            for (WheelPoint item : mainTable.getItems()) {
+                if (item.getName().equals(wheelPoint.getName())) {
+                    unique = false;
+                    oldElement = item;
+                    break;
+                }
+            }
+            if (unique) {
+                mainTable.getItems().add(wheelPoint);
+                calculateWheelDuel(countAllWheelPoints());
+            } else
+                oldElement.setMultiplier(oldElement.getMultiplier() + wheelPoint.getMultiplier());
+        } else {
+            mainTable.getItems().add(wheelPoint);
+        }
+        mainTable.refresh();
     }
 }

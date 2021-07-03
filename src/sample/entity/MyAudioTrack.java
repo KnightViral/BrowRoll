@@ -23,22 +23,33 @@ public class MyAudioTrack {
         }
     }
 
-    public void start() {
+    public void start(int framePosition, boolean loop) {
         try {
             for (Clip clip : clips) {
                 clip.open(AudioSystem.getAudioInputStream(this.url));
                 //((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).getMaximum());
+                if (loop) {
+                    clip.loop(Clip.LOOP_CONTINUOUSLY);
+                }
             }
         }catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
             //todo ловить ошибки
         }
-        clips.forEach(clip -> clip.setFramePosition(50000));
+        clips.forEach(clip -> clip.setFramePosition(framePosition));
         clips.forEach(clip -> clip.addLineListener(event -> {
             if (event.getType().equals(LineEvent.Type.STOP))
                 event.getLine().close();
         }));
         clips.forEach(DataLine::start);
+    }
+
+    public void start() {
+        start(70000, false);
+    }
+
+    public void start(int framePosition) {
+        start(framePosition, false);
     }
 
     public void stop() {
