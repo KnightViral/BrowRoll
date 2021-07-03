@@ -49,6 +49,7 @@
 /*<<<<<<<<<<<<<<<<<<<<<< Button START >>>>>>>>>>>>>>>>>>>>>>>>*/
 .button {
     -fx-background-color: lightgray;
+    -fx-font-weight: bold;
 }
 /*<<<<<<<<<<<<<<<<<<<<<< Button END >>>>>>>>>>>>>>>>>>>>>>>>*/
 
