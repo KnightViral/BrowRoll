@@ -1,14 +1,11 @@
 package sample.screens.fragments.wheels;
 
 import javafx.animation.RotateTransition;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import sample.Utils;
@@ -39,7 +36,6 @@ public class WheelFragment {
     private void initPane() {
         pane = new StackPane();
         VBox.setVgrow(pane, Priority.ALWAYS);
-        pane.setStyle("-fx-background-image: url(../../../resource/pics/browFat.jpg);");
     }
 
     private void initWheel() {
@@ -47,13 +43,13 @@ public class WheelFragment {
         wheel.setMinHeight(0);
         wheel.setLabelLineLength(10);
         wheel.setLegendVisible(false);
-        wheel.getStylesheets().add(getClass().getResource("../../../style.css").toExternalForm());
+        wheel.getStylesheets().add(this.getClass().getResource("/sample/style.css").toExternalForm());
         pane.getChildren().add(wheel);
     }
 
     private void initPointer() {
         pointerVBox = new VBox();
-        pointerVBox.getStylesheets().add(getClass().getResource("../../../style.css").toExternalForm());
+        pointerVBox.getStylesheets().add(this.getClass().getResource("/sample/style.css").toExternalForm());
         pointerVBox.getStyleClass().add("vboxMark");
         pointerVBox.setFocusTraversable(true);
         pointerVBox.setMouseTransparent(true);
@@ -71,7 +67,7 @@ public class WheelFragment {
     }
 
     private void initRollImg() {
-        rollImg = new ImageView(String.valueOf(this.getClass().getResource("../../../resource/pics/browFatRoll.png")));
+        rollImg = new ImageView(String.valueOf(getClass().getResource("/sample/resource/pics/browFatRoll.png")));
         rollImg.setFitHeight(150);
         rollImg.setFitWidth(150);
         rollImg.setPickOnBounds(true);
@@ -133,14 +129,14 @@ public class WheelFragment {
             rtBrow.setByAngle(-Utils.getRandomBetween(720, 1920));
             WheelFragment owner = this;
             try {
-                MyAudioTrack track = new MyAudioTrack(owner.getClass().getResource("../../../resource/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                MyAudioTrack track = new MyAudioTrack(owner.getClass().getResource("/sample/resource/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                 track.start();
                 rt.setOnFinished(event -> {
                     WheelPoint winner = checkRollWinner();
                     String winnerName = getWheelPointNameNotNull(winner);
                     rollBtn.setText(winnerName);
                     track.stop();
-                    MyAudioTrack trackFinish = new MyAudioTrack(owner.getClass().getResource("../../../resource/" + SoundsProvider.getSound()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                    MyAudioTrack trackFinish = new MyAudioTrack(owner.getClass().getResource("/sample/resource/" + SoundsProvider.getSound()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                     trackFinish.start();
                     try { //todo EXCEPTION
                         SaveLoadWizard.save(table, winnerName);
