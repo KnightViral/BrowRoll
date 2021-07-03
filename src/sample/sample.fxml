@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
 <VBox fx:id="mainVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: DimGray;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
@@ -9,36 +11,82 @@
             <children>
                 <ToolBar style="-fx-background-color: DimGray;" HBox.hgrow="ALWAYS">
                     <items>
-                        <TextField fx:id="newNameTA" promptText="Name" style="-fx-background-color: lightgray; -fx-prompt-text-fill: purple;" />
-                        <TextField fx:id="newMultiplierTA" promptText="Multiplier" style="-fx-background-color: lightgray; -fx-prompt-text-fill: purple;" />
+                        <TextField fx:id="newNameTA" promptText="Название" style="-fx-background-color: lightgray; -fx-prompt-text-fill: purple;" />
+                    <MenuButton mnemonicParsing="false" style="-fx-background-color: Lightgray; -fx-font-weight: bold;">
+                        <items>
+                            <MenuItem mnemonicParsing="false" onAction="#onAnimeButtonPress" style="-fx-font-weight: bold;" text="Аниме" />
+                            <MenuItem mnemonicParsing="false" onAction="#onMovieButtonPress" style="-fx-font-weight: bold;" text="Фильм" />
+                            <MenuItem mnemonicParsing="false" onAction="#onGameButtonPress" style="-fx-font-weight: bold;" text="Игра" />
+                        </items>
+                    </MenuButton>
+                        <TextField fx:id="newMultiplierTA" promptText="Множитель" style="-fx-background-color: lightgray; -fx-prompt-text-fill: purple;" />
                         <Button fx:id="addBtn" mnemonicParsing="false" onAction="#onAddButtonPress" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Добавить" />
                         <Button fx:id="kekBtn" mnemonicParsing="false" onAction="#onKekButtonPress" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Подкрутить" textFill="#800080" />
-                  <Label style="-fx-font-weight: bold;" text="Всего пунктов:" textFill="lightgray"/>
-                  <Label fx:id="counterLabel" style="-fx-font-weight: bold;" text="0" textFill="lightgray" />
                     </items>
                 </ToolBar>
                 <ToolBar nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: DimGray;" HBox.hgrow="ALWAYS">
                     <items>
-                        <MenuButton mnemonicParsing="false" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Ролить">
+                        <MenuButton mnemonicParsing="false" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Доп.">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#onWriteFileButtonPress" style="-fx-font-weight: bold;" text="Запись в файл" />
-                                <MenuItem fx:id="openInWebMenuItem" mnemonicParsing="false" onAction="#onOpenInBrowserButtonPress" style="-fx-font-weight: bold;" text="Открыть на Wheeldecide" />
+                                <MenuItem mnemonicParsing="false" onAction="#onLoadScreenButtonPress" text="Авто Энкон" />
+                                <MenuItem mnemonicParsing="false" onAction="#onSaveCurrentTableButtonPress" text="Сохранить текущую таблицу" />
+                                <MenuItem mnemonicParsing="false" onAction="#onWriteFileButtonPress" text="Запись вариантов в файл" />
+                                <MenuItem fx:id="openInWebMenuItem" mnemonicParsing="false" onAction="#onOpenInBrowserButtonPress" text="Открыть на Wheeldecide" visible="false" />
+                                <MenuItem fx:id="sortBtn" mnemonicParsing="false" onAction="#onSortButtonPress" text="Сортировать" />
+                                <MenuItem mnemonicParsing="false" onAction="#onRecountWheelButtonPress" text="Пересобрать колесо" />
+                                <MenuItem mnemonicParsing="false" onAction="#onHideShowWheelNamesButtonPress" text="Скрыть/Показать подписи колеса" />
+                                <MenuItem mnemonicParsing="false" onAction="#onTestSoundButtonPress" text="Проверить громкость" />
+                                <MenuItem mnemonicParsing="false" onAction="#onHundredsTypeButtonPress" text="Режим &quot;По соточкам&quot;" />
+                                <MenuItem mnemonicParsing="false" onAction="#onRubblesTypeButtonPress" text="Режим &quot;По сумме&quot;" />
+                                <MenuItem mnemonicParsing="false" onAction="#onClearTableButtonPress" text="Очистить таблицу" />
+                                <CheckMenuItem fx:id="randomKekCheckBox" mnemonicParsing="false" text="Случайные подкрутки" />
                             </items>
                         </MenuButton>
-                        <Button fx:id="sortBtn" mnemonicParsing="false" onAction="#onSortButtonPress" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Сортировать" />
+                        <MenuButton fx:id="timerMenu" mnemonicParsing="false" style="-fx-background-color: Lightgray; -fx-font-weight: bold;">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#onSetTimer30ButtonPress" style="-fx-font-weight: bold;" text="30 минут" />
+                                <MenuItem mnemonicParsing="false" onAction="#onPlayTimer30ButtonPress" style="-fx-font-weight: bold;" text="Старт" />
+                                <MenuItem mnemonicParsing="false" onAction="#onStopTimerButtonPress" style="-fx-font-weight: bold;" text="Стоп" />
+                                <MenuItem mnemonicParsing="false" onAction="#onAdd2Timer30ButtonPress" style="-fx-font-weight: bold;" text="Добавить 2 минуты" />
+                                <MenuItem mnemonicParsing="false" onAction="#onRemove2Timer30ButtonPress" style="-fx-font-weight: bold;" text="Убрать 2 минуты" />
+                            </items>
+                        </MenuButton>
+                  <CheckBox fx:id="regimeCheckBox" mnemonicParsing="false" onAction="#onSwitchRegime" style="-fx-font-weight: bold;" text="Дуэль" textFill="lightgray"/>
                     </items>
                 </ToolBar>
             </children>
         </HBox>
-        <TableView fx:id="mainTable" editable="true" prefHeight="551.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
-            <columns>
-                <TableColumn fx:id="idColumn" editable="false" prefWidth="100.0" resizable="false" text="ID" />
-                <TableColumn fx:id="nameColumn" onEditStart="#onAddButtonPress" prefWidth="100.0" text="name" />
-                <TableColumn fx:id="multiplierColumn" editable="false" prefWidth="100.0" resizable="false" text="X" />
-                <TableColumn fx:id="addColumn" editable="false" prefWidth="100.0" resizable="false" text="+" />
-                <TableColumn fx:id="decreaseColumn" editable="false" prefWidth="100.0" resizable="false" text="-" />
-                <TableColumn fx:id="removeColumn" editable="false" prefWidth="100.0" text="del" />
-            </columns>
-        </TableView>
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+            <tabs>
+                <Tab text="Таблица">
+                    <content>
+                        <TableView fx:id="mainTable" editable="true" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="idColumn" editable="false" prefWidth="100.0" resizable="false" text="ID" />
+                                <TableColumn fx:id="nameColumn" prefWidth="100.0" text="name" />
+                                <TableColumn fx:id="percentColumn" editable="false" prefWidth="100.0" resizable="false" text="\%" />
+                                <TableColumn fx:id="multiplierColumn" editable="false" prefWidth="100.0" resizable="false" text="X" />
+                                <TableColumn fx:id="addColumn" editable="false" prefWidth="100.0" resizable="false" text="+" />
+                                <TableColumn fx:id="decreaseColumn" editable="false" prefWidth="100.0" resizable="false" text="-" />
+                                <TableColumn fx:id="addNumberColumn" editable="false" prefWidth="100.0" resizable="false" text="add" />
+                                <TableColumn fx:id="removeColumn" editable="false" prefWidth="100.0" text="del" />
+                            </columns>
+                        </TableView>
+                    </content>
+                </Tab>
+                <Tab text="Колесико">
+                    <content>
+                        <StackPane fx:id="wheelSPane" style="-fx-background-image: url(resource/pics/browFat.jpg);" VBox.vgrow="ALWAYS">
+                            <children>
+                                <PieChart fx:id="wheelPC" labelLineLength="10.0" legendVisible="false" minHeight="0.0" />
+                                <VBox fx:id="cssImageVBox" focusTraversable="true" visible="false" mouseTransparent="true"/>
+                                <Button fx:id="rollBtn" mnemonicParsing="false" onAction="#onRollButtonPress" style="-fx-background-color: lightgray; -fx-font-weight: bold; -fx-background-radius: 5em;" text="Крутонуть" textFill="#800080" visible="false" />
+                                <ImageView fx:id="browRollImg" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+                            </children>
+                        </StackPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
     </children>
 </VBox>
