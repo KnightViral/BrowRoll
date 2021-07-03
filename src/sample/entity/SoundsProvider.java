@@ -22,6 +22,15 @@ public class SoundsProvider {
             "hit5.wav",
     };
 
+    private final static String[] MK_MIX_SOUNDS = new String[] {
+            "mksounds/hit1.wav",
+            "mksounds/hit2.wav",
+            "mksounds/hit3.wav",
+            "mksounds/hit4.wav",
+            "mksounds/hit5.wav",
+            "300.wav", "Deep dark fantasies.wav", "fuck you.wav", "Iam an artist.wav", "NANI.wav", "Omae wa mou shindeiru.wav", "Spank.wav", "WOO.wav", "YES I AM.wav", "YES YES YES YES YES.wav", "Oh no!.wav"
+    };
+
     public static String getSound() {
         return Utils.getRandomStringFromArray(END_SOUNDS);
     }
@@ -48,5 +57,9 @@ public class SoundsProvider {
 
     public static String getMKMusic () {
         return "mksounds/music.wav";
+    }
+
+    public static String getMKMix() {
+        return Utils.getRandomStringFromArray(MK_MIX_SOUNDS);
     }
 }

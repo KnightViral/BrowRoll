@@ -12,8 +12,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Да, это же АУКЦыОН! Теперь со звуком!!! POG 1.1.5");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setTitle("Да, это же АУКЦыОН! Теперь со звуком!!! POG 1.2.0");
+        primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("resource/pics/browFat.jpg")));
         primaryStage.show();
     }

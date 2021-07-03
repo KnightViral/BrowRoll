@@ -19,6 +19,8 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.scene.image.Image;
 import sample.entity.*;
+import sample.screens.fragments.DuelFragment;
+import sample.screens.fragments.wheels.DuelWheelFragment;
 
 import javax.sound.sampled.AudioSystem;
 import java.io.*;
@@ -73,11 +75,14 @@ public class Controller {
     public VBox cssImageVBox;
     @FXML
     public CheckBox regimeCheckBox;
+    @FXML
+    public Tab testWheelTab;
 
     private int idCounter;
 
     private final static String WHEEL_LINK = "https://wheeldecide.com/?";
     private double countMultiplier = 0;
+    private DuelFragment duelFragment;
 
     private MyTimer timer;
 
@@ -90,6 +95,12 @@ public class Controller {
         onRubblesTypeButtonPress();
         initTimer();
         randomKekCheckBox.setSelected(false);
+        initTestWheelTab();
+    }
+
+    private void initTestWheelTab() {
+        duelFragment = new DuelFragment(mainTable);
+        testWheelTab.setContent(duelFragment.getNode());
     }
 
     private void initTimer(){
@@ -573,6 +584,54 @@ public class Controller {
     @FXML
     void onRemove2Timer30ButtonPress() {
         timer.addSeconds(-2 * 60);
+    }
+
+    @FXML
+    void onFillTestDataButtonPress() {
+        addToTable(new WheelPoint(1, "isaac", 5));
+        addToTable(new WheelPoint(2, "Какаята анима", 50));
+        addToTable(new WheelPoint(3, "ДС нодес", 50));
+        addToTable(new WheelPoint(4, "Варио", 50));
+        addToTable(new WheelPoint(5, "Адвенчур айленд", 50));
+        addToTable(new WheelPoint(6, "Елекс", 50));
+        addToTable(new WheelPoint(7, "Якудза 0", 250));
+        addToTable(new WheelPoint(8, "Геншин импакт", 50));
+        addToTable(new WheelPoint(9, "Рандом дос", 51));
+        addToTable(new WheelPoint(10, "Рандом снес", 51));
+        addToTable(new WheelPoint(11, "Ви зе революшн", 52));
+        addToTable(new WheelPoint(12, "Шадоу ман", 100));
+        addToTable(new WheelPoint(13, "Чакан", 100));
+        addToTable(new WheelPoint(14, "КСго", 100));
+        addToTable(new WheelPoint(15, "Арех", 155));
+        addToTable(new WheelPoint(16, "Саботер", 176));
+        addToTable(new WheelPoint(17, "Герои 1", 200));
+        addToTable(new WheelPoint(18, "Герои 2", 200));
+        addToTable(new WheelPoint(19, "Герои 3", 200));
+        addToTable(new WheelPoint(20, "Герои 4", 200));
+        addToTable(new WheelPoint(21, "Герои 5", 200));
+        addToTable(new WheelPoint(22, "Рандом амига", 200));
+        addToTable(new WheelPoint(23, "Сторибук бравл", 200));
+        addToTable(new WheelPoint(24, "Варфреим", 200));
+        addToTable(new WheelPoint(25, "Дум 3", 200));
+        addToTable(new WheelPoint(26, "Рисен 3", 200));
+        addToTable(new WheelPoint(27, "Ноита", 223));
+        addToTable(new WheelPoint(28, "Каулдрон", 225));
+        addToTable(new WheelPoint(29, "Дайси Данжон", 250));
+        addToTable(new WheelPoint(30, "рандом нес", 251));
+        addToTable(new WheelPoint(31, "Андермайн", 300));
+        addToTable(new WheelPoint(32, "SteamWorld dig 2", 300));
+        addToTable(new WheelPoint(33, "Will Rock", 400));
+        addToTable(new WheelPoint(34, "Blood", 666));
+        addToTable(new WheelPoint(35, "Рандом спектрум", 666));
+        addToTable(new WheelPoint(36, "BPM", 700));
+        addToTable(new WheelPoint(37, "Тексторцист", 855));
+        addToTable(new WheelPoint(38, "Вар Тандер", 1000));
+        addToTable(new WheelPoint(39, "Руинер", 1000));
+        addToTable(new WheelPoint(40, "Джорни", 1000));
+        addToTable(new WheelPoint(41, "Твистед метал 2", 1750));
+        addToTable(new WheelPoint(42, "Dark Messiah of Might and Magic", 100));
+        idCounter = 43;
+        sort();
     }
 
     private void setTimerTo30(){
