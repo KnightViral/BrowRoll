@@ -78,7 +78,7 @@ public class DuelFragment {
         multiplierColumn.prefWidthProperty().bind(table.widthProperty().multiply(0.3));
         multiplierColumn.setCellValueFactory(new PropertyValueFactory<>("multiplier"));
         multiplierColumn.setResizable(false);
-        multiplierColumn.setText("X");
+        multiplierColumn.setText("Amount");
         table.getColumns().add(multiplierColumn);
         sort();
         return table;
