@@ -35,7 +35,7 @@
                                 <MenuItem fx:id="sortBtn" mnemonicParsing="false" onAction="#onSortButtonPress" text="Сортировать" visible="false" />
                                 <MenuItem mnemonicParsing="false" onAction="#onRecountWheelButtonPress" text="Пересобрать колесо" />
                                 <MenuItem mnemonicParsing="false" onAction="#onHideShowWheelNamesButtonPress" text="Скрыть/Показать подписи колеса" />
-                                <MenuItem mnemonicParsing="false" onAction="#onTestSoundButtonPress" text="Проверить громкость" />
+                                <MenuItem mnemonicParsing="false" onAction="#onTestSoundButtonPress" text="Проверить громкость" visible="false"/>
                                 <MenuItem mnemonicParsing="false" onAction="#onHundredsTypeButtonPress" text="Режим &quot;По соточкам&quot;" visible="false" />
                                 <MenuItem mnemonicParsing="false" onAction="#onRubblesTypeButtonPress" text="Режим &quot;По сумме&quot;" visible="false" />
                                 <MenuItem mnemonicParsing="false" onAction="#onClearTableButtonPress" text="Очистить таблицу" />

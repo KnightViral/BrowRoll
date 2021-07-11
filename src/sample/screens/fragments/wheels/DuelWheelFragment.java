@@ -18,21 +18,20 @@ public class DuelWheelFragment extends WheelFragment {
     private boolean needsRecalculation = false;
     private boolean needsEating = false; //todo needs wizard for this
     private WheelPoint winner = null;
-    private MyAudioTrack music = null;
+    private final MyAudioTrack music;
 
     public DuelWheelFragment(TableView<WheelPoint> table) {
         super(table);
         rollImg.setImage(new Image(String.valueOf(this.getClass().getResource("/sample/resource/pics/browBlameRoll.png"))));
+        pointerVBox.getStyleClass().clear();
+        pointerVBox.getStyleClass().add("vboxLongMark");
+        music = new MyAudioTrack(this.getClass().getResource("/sample/resource/" + SoundsProvider.getMKMusic()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
     }
 
     public void startDuel(boolean duelInProgress){
         this.duelInProgress = duelInProgress;
         needsRecalculation = false;
         needsEating = false;
-        winner = null;
-        if (music == null) {
-            music = new MyAudioTrack(this.getClass().getResource("/sample/resource/" + SoundsProvider.getMKMusic()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
-        }
         if (duelInProgress) {
             SaveLoadWizard.save(table, "Начало дуэли. Автосохранение.");
             calculateWheel(countAllWheelPoints());
@@ -134,6 +133,7 @@ public class DuelWheelFragment extends WheelFragment {
                             String winnerName = getWheelPointNameNotNull(winner);
                             rollBtn.setText(winnerName);
                             track.stop();
+                            music.stop();
                             MyAudioTrack trackFinish = new MyAudioTrack(owner.getClass().getResource("/sample/resource/" + SoundsProvider.getMKHit()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                             trackFinish.start(0);
                             MyAudioTrack trackFinishSecond = new MyAudioTrack(owner.getClass().getResource("/sample/resource/" + SoundsProvider.getSound()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
@@ -153,6 +153,7 @@ public class DuelWheelFragment extends WheelFragment {
                             WheelPoint winner = checkRollWinner();
                             String winnerName = getWheelPointNameNotNull(winner);
                             rollBtn.setText(winnerName);
+                            music.stop();
                             needsEating = true;
                             this.winner = winner;
 
@@ -180,6 +181,7 @@ public class DuelWheelFragment extends WheelFragment {
                     winner.setMultiplier(winner.getMultiplier() + loser.getMultiplier());
                     removeWheelPoint(loser);
                     MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("/sample/resource/" + SoundsProvider.getMKEat()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                    music.start(0, true);
                     track.start(0);
                     if (countAllWheelPoints() == 1) {
                         MyAudioTrack winTrack = new MyAudioTrack(this.getClass().getResource("/sample/resource/" + SoundsProvider.getMKIWin()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));

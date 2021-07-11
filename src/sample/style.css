@@ -117,3 +117,10 @@
     -fx-background-repeat: stretch;
     -fx-background-position: center center;
 }
+
+.vboxLongMark {
+    -fx-background-image: url("resource/pics/longMark.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
+}

@@ -31,6 +31,10 @@ public class SoundsProvider {
             "300.wav", "Deep dark fantasies.wav", "fuck you.wav", "Iam an artist.wav", "NANI.wav", "Omae wa mou shindeiru.wav", "Spank.wav", "WOO.wav", "YES I AM.wav", "YES YES YES YES YES.wav", "Oh no!.wav"
     };
 
+    private final static String[] NOT_USED = new String[] {
+            "sega_scream.wav"
+    };
+
     public static String getSound() {
         return Utils.getRandomStringFromArray(END_SOUNDS);
     }
