@@ -33,7 +33,6 @@ public class DuelWheelFragment extends WheelFragment {
         needsRecalculation = false;
         needsEating = false;
         if (duelInProgress) {
-            SaveLoadWizard.save(table, "Начало дуэли. Автосохранение.");
             calculateWheel(countAllWheelPoints());
             MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("/sample/resource/" + SoundsProvider.getMKChoose()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
             track.start(0);

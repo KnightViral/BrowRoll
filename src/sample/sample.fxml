@@ -52,7 +52,7 @@
                                 <MenuItem mnemonicParsing="false" onAction="#onRemove2Timer30ButtonPress" style="-fx-font-weight: bold;" text="Убрать 2 минуты" />
                             </items>
                         </MenuButton>
-                  <CheckBox fx:id="regimeCheckBox" mnemonicParsing="false" onAction="#onSwitchRegime" style="-fx-font-weight: bold;" text="Дуэль" textFill="lightgray"/>
+                  <CheckBox fx:id="regimeCheckBox" mnemonicParsing="false" onAction="#onSwitchRegime" style="-fx-font-weight: bold;" text="Дуэль" textFill="lightgray" visible="false"/>
                     </items>
                 </ToolBar>
             </children>

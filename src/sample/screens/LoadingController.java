@@ -1,12 +1,10 @@
 package sample.screens;
 
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -76,8 +74,11 @@ public class LoadingController {
                         if (empty) {
                             setGraphic(null);
                         } else {
+                            RollSave save = mainTable.getItems().get(getIndex());
+                            getTableRow().pseudoClassStateChanged(PseudoClass.getPseudoClass("important"),
+                                    save.getName().equals("Начало дуэли. Автосохранение.")
+                                            || save.getName().equals("Включен режим дуэли. Автосохранение."));
                             btn.setOnAction(event -> {
-                                RollSave save = mainTable.getItems().get(getIndex());
                                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/screens/historycontroller.fxml"));
                                 Stage stage = new Stage(StageStyle.DECORATED);
                                 try {

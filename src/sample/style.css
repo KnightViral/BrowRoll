@@ -23,6 +23,9 @@
 .table-row-cell: even{
     -fx-background-color: gray;
 }
+.table-row-cell: important{
+    -fx-background-color: darkorange;
+}
 .table-view .column-header-background .filler {
     -fx-background-color: transparent;
 }
