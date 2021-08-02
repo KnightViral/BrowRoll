@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import sample.entity.SaveLoadWizard;
 import sample.entity.WheelPoint;
 import sample.entity.WheelPointSave;
 

@@ -8,6 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import sample.entity.SaveLoadWizard;
 import sample.entity.WheelPoint;
 import sample.screens.fragments.wheels.DuelWheelFragment;
 
@@ -91,6 +92,7 @@ public class DuelFragment {
     private void startDuel() {
         toolBar.getItems().remove(startBtn);
         toolBar.getItems().add(stopBtn);
+        SaveLoadWizard.save(sourceTable, "Начало дуэли. Автосохранение.");
         sourceTable.getItems().forEach(item -> {
             WheelPoint clone = new WheelPoint(item.getId(), item.getName(), item.getMultiplier());
             wheelFragment.addToTable(clone);
