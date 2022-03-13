@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import sample.entity.StyleProvider;
 import sample.entity.WheelPoint;
 import sample.entity.WheelPointSave;
 
@@ -26,7 +27,7 @@ public class HistoryController {
     private void initTable() {
         initNameColumn();
         initMultiplierColumn();
-        mainTable.getStylesheets().add(getClass().getResource("/sample/style.css").toExternalForm());
+        mainTable.getStylesheets().add(getClass().getResource("/sample/" + StyleProvider.getStyle()).toExternalForm());
         multiplierColumn.setSortType(TableColumn.SortType.DESCENDING);
         mainTable.getSortOrder().clear();
         mainTable.getSortOrder().add(multiplierColumn);

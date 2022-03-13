@@ -48,7 +48,7 @@ public class JokeGenerator {
             case 10:
                 return new WheelPoint(JOKE_ID, "Ндиди", 0);
             case 11:
-                return new WheelPoint(JOKE_ID, "+игра на все платформы", 0);
+                return new WheelPoint(JOKE_ID, "+игра на все платформы", 1);
             case 12:
                 return new WheelPoint(JOKE_ID, AnekProvider.getAnek(), 0);
             case 13:

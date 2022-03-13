@@ -22,7 +22,7 @@ public class DuelWheelFragment extends WheelFragment {
 
     public DuelWheelFragment(TableView<WheelPoint> table) {
         super(table);
-        rollImg.setImage(new Image(String.valueOf(this.getClass().getResource("/sample/resource/pics/browBlameRoll.png"))));
+        rollImg.setImage(new Image(String.valueOf(this.getClass().getResource("/sample/resource/pics/" + StyleProvider.getDuelRollPic()))));
         pointerVBox.getStyleClass().clear();
         pointerVBox.getStyleClass().add("vboxLongMark");
         music = new MyAudioTrack(this.getClass().getResource("/sample/resource/" + SoundsProvider.getMKMusic()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
@@ -126,7 +126,7 @@ public class DuelWheelFragment extends WheelFragment {
                     WheelFragment owner = this;
                     try {
                         MyAudioTrack track = new MyAudioTrack(owner.getClass().getResource("/sample/resource/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
-                        track.start();
+                        track.start(0, true);
                         rt.setOnFinished(event -> {
                             WheelPoint winner = checkRollWinner();
                             String winnerName = getWheelPointNameNotNull(winner);
@@ -136,7 +136,7 @@ public class DuelWheelFragment extends WheelFragment {
                             MyAudioTrack trackFinish = new MyAudioTrack(owner.getClass().getResource("/sample/resource/" + SoundsProvider.getMKHit()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                             trackFinish.start(0);
                             MyAudioTrack trackFinishSecond = new MyAudioTrack(owner.getClass().getResource("/sample/resource/" + SoundsProvider.getSound()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
-                            trackFinishSecond.start(50000);
+                            trackFinishSecond.start();
                             needsEating = true;
                             this.winner = winner;
 

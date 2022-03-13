@@ -43,13 +43,13 @@ public class WheelFragment {
         wheel.setMinHeight(0);
         wheel.setLabelLineLength(10);
         wheel.setLegendVisible(false);
-        wheel.getStylesheets().add(this.getClass().getResource("/sample/style.css").toExternalForm());
+        wheel.getStylesheets().add(this.getClass().getResource("/sample/" + StyleProvider.getStyle()).toExternalForm());
         pane.getChildren().add(wheel);
     }
 
     private void initPointer() {
         pointerVBox = new VBox();
-        pointerVBox.getStylesheets().add(this.getClass().getResource("/sample/style.css").toExternalForm());
+        pointerVBox.getStylesheets().add(this.getClass().getResource("/sample/" + StyleProvider.getStyle()).toExternalForm());
         pointerVBox.getStyleClass().add("vboxMark");
         pointerVBox.setFocusTraversable(true);
         pointerVBox.setMouseTransparent(true);
@@ -67,7 +67,7 @@ public class WheelFragment {
     }
 
     private void initRollImg() {
-        rollImg = new ImageView(String.valueOf(getClass().getResource("/sample/resource/pics/browFatRoll.png")));
+        rollImg = new ImageView(String.valueOf(getClass().getResource("/sample/resource/pics/" + StyleProvider.getRollPic())));
         rollImg.setFitHeight(150);
         rollImg.setFitWidth(150);
         rollImg.setPickOnBounds(true);
@@ -130,7 +130,7 @@ public class WheelFragment {
             WheelFragment owner = this;
             try {
                 MyAudioTrack track = new MyAudioTrack(owner.getClass().getResource("/sample/resource/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
-                track.start();
+                track.start(0, true);
                 rt.setOnFinished(event -> {
                     WheelPoint winner = checkRollWinner();
                     String winnerName = getWheelPointNameNotNull(winner);

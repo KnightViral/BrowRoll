@@ -45,7 +45,7 @@ public class MyAudioTrack {
     }
 
     public void start() {
-        start(70000, false);
+        start(0, false);
     }
 
     public void start(int framePosition) {
