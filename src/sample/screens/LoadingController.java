@@ -44,7 +44,7 @@ public class LoadingController {
         initDateColumn();
         initLoadBtnColumn();
         initFileBtnColumn();
-        mainTable.getStylesheets().add(getClass().getResource("/sample/style.css").toExternalForm());
+        mainTable.getStylesheets().add(getClass().getResource("/sample/" + StyleProvider.getStyle()).toExternalForm());
         fillTable();
         mainTable.getItems().sort(Comparator.comparing(RollSave::getDate, Comparator.nullsLast(Comparator.reverseOrder())));
     }

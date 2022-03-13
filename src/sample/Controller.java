@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.animation.RotateTransition;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,7 +21,6 @@ import javafx.util.Duration;
 import javafx.scene.image.Image;
 import sample.entity.*;
 import sample.screens.fragments.DuelFragment;
-import sample.screens.fragments.wheels.DuelWheelFragment;
 
 import javax.sound.sampled.AudioSystem;
 import java.io.*;
@@ -77,14 +77,17 @@ public class Controller {
     public CheckBox regimeCheckBox;
     @FXML
     public Tab testWheelTab;
+    @FXML
+    public TextField searchTF;
 
     private int idCounter;
 
     private final static String WHEEL_LINK = "https://wheeldecide.com/?";
     private double countMultiplier = 0;
-    private DuelFragment duelFragment;
+    private boolean tableSpins = false;
 
     private MyTimer timer;
+    private DuelFragment duelFragment;
 
     @FXML
     void initialize() {
@@ -96,6 +99,9 @@ public class Controller {
         initTimer();
         randomKekCheckBox.setSelected(false);
         initTestWheelTab();
+
+        searchTF.textProperty().addListener(
+                (observable, oldValue, newValue) -> mainTable.refresh());
     }
 
     private void initTestWheelTab() {
@@ -110,18 +116,18 @@ public class Controller {
     }
 
     private void initWheel() {
-        wheelPC.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        wheelPC.getStylesheets().add(getClass().getResource(StyleProvider.getStyle()).toExternalForm());
     }
 
     private void initTabPane() {
-        tabPane.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        tabPane.getStylesheets().add(getClass().getResource(StyleProvider.getStyle()).toExternalForm());
         initWheelTab();
     }
 
     private void initWheelTab() {
-        cssImageVBox.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        cssImageVBox.getStylesheets().add(getClass().getResource(StyleProvider.getStyle()).toExternalForm());
         cssImageVBox.getStyleClass().add("vboxMark");
-        browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/browFatRoll.png"))));
+        browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/" + StyleProvider.getRollPic()))));
     }
 
     private void initTable() {
@@ -133,7 +139,7 @@ public class Controller {
         initDecreaseColumn();
         initAddNumberColumn();
         initRemoveColumn();
-        mainTable.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        mainTable.getStylesheets().add(getClass().getResource(StyleProvider.getStyle()).toExternalForm());
         sort();
     }
 
@@ -322,10 +328,15 @@ public class Controller {
                                 countMultiplier > 0 &&
                                 mainTable.getItems().get(getIndex()).getMultiplier() > 0 &&
                                 mainTable.getItems().get(getIndex()).getId() != JokeGenerator.getJokeId()
-                        )
+                        ){
                             setText(String.format("%.1f", (double) mainTable.getItems().get(getIndex()).getMultiplier() / countMultiplier * 100));
-                        else
+                            getTableRow().pseudoClassStateChanged(PseudoClass.getPseudoClass("important"),
+                                    !searchTF.getText().isEmpty() &&
+                                    mainTable.getItems().get(getIndex()).getName().toLowerCase().contains(searchTF.getText().toLowerCase()));
+                        }
+                        else {
                             setText(null);
+                        }
                     }
                 };
             }
@@ -395,6 +406,7 @@ public class Controller {
 
     @FXML
     void onKekButtonPress() {
+        SaveLoadWizard.save(mainTable, "Автосейв перед подкруткой.");
         if (duelRegime) {
             addToTableDuel(JokeGenerator.getJoke(mainTable));
         } else {
@@ -477,7 +489,7 @@ public class Controller {
             Controller c = this;
             try {
                 MyAudioTrack track = new MyAudioTrack(c.getClass().getResource("resource/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
-                track.start();
+                track.start(0, true);
                 rt.setOnFinished(event -> {
                     WheelPoint winner = checkRollWinner();
                     String winnerName = getWheelPointNameNotNull(winner);
@@ -741,18 +753,24 @@ public class Controller {
     }
 
     private void randomRotateMainTable() {
-        RotateTransition rt = new RotateTransition(Duration.millis(2000), mainTable);
-        //так сложно, чтобы иногда таблица медленно переворачивалась на 180
-        int rotateNumber = Utils.getRandomBetween(1, 10);
-        if (rotateNumber != 1 && rotateNumber % 2 != 0)
-            rotateNumber++;
-        if (mainTable.getRotate() % 360 != 0) {
-            rt.setByAngle(-540);
-        } else {
-            mainTable.setRotate(0);
-            rt.setByAngle(180 * rotateNumber);
+        if (!tableSpins) {
+            tableSpins = true;
+            RotateTransition rt = new RotateTransition(Duration.millis(2000), mainTable);
+            //так сложно, чтобы иногда таблица медленно переворачивалась на 180
+            int rotateNumber = Utils.getRandomBetween(1, 10);
+            if (rotateNumber != 1 && rotateNumber % 2 != 0)
+                rotateNumber++;
+            if (mainTable.getRotate() % 360 != 0) {
+                rt.setByAngle(-540);
+            } else {
+                mainTable.setRotate(0);
+                rt.setByAngle(180 * rotateNumber);
+            }
+            rt.setOnFinished(event -> {
+                tableSpins = false;
+            });
+            rt.play();
         }
-        rt.play();
     }
 
     private double getNewMultiplier() {
@@ -877,13 +895,13 @@ public class Controller {
         }
         if (duelRegime) {
             SaveLoadWizard.save(mainTable, "Включен режим дуэли. Автосохранение.");
-            browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/browBlameRoll.png"))));
+            browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/" + StyleProvider.getDuelRollPic()))));
             calculateWheelDuel(countAllWheelPoints());
             MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("resource/" + SoundsProvider.getMKChoose()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
             track.start(0);
             music.start(0, true);
         } else {
-            browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/browFatRoll.png"))));
+            browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/" + StyleProvider.getRollPic()))));
             calculateWheel(countAllMultipliers());
             MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("resource/" + SoundsProvider.getSlap()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
             track.start();
@@ -969,7 +987,7 @@ public class Controller {
                     Controller c = this;
                     try {
                         MyAudioTrack track = new MyAudioTrack(c.getClass().getResource("resource/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
-                        track.start();
+                        track.start(0, true);
                         rt.setOnFinished(event -> {
                             WheelPoint winner = checkRollWinner();
                             String winnerName = getWheelPointNameNotNull(winner);

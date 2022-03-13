@@ -34,7 +34,7 @@
                                 <MenuItem fx:id="openInWebMenuItem" mnemonicParsing="false" onAction="#onOpenInBrowserButtonPress" text="Открыть на Wheeldecide" visible="false" />
                                 <MenuItem fx:id="sortBtn" mnemonicParsing="false" onAction="#onSortButtonPress" text="Сортировать" visible="false" />
                                 <MenuItem mnemonicParsing="false" onAction="#onRecountWheelButtonPress" text="Пересобрать колесо" />
-                                <MenuItem mnemonicParsing="false" onAction="#onHideShowWheelNamesButtonPress" text="Скрыть/Показать подписи колеса" />
+                                <MenuItem mnemonicParsing="false" onAction="#onHideShowWheelNamesButtonPress" text="Скрыть/Показать подписи колеса" visible="false"/>
                                 <MenuItem mnemonicParsing="false" onAction="#onTestSoundButtonPress" text="Проверить громкость" visible="false"/>
                                 <MenuItem mnemonicParsing="false" onAction="#onHundredsTypeButtonPress" text="Режим &quot;По соточкам&quot;" visible="false" />
                                 <MenuItem mnemonicParsing="false" onAction="#onRubblesTypeButtonPress" text="Режим &quot;По сумме&quot;" visible="false" />
@@ -52,7 +52,8 @@
                                 <MenuItem mnemonicParsing="false" onAction="#onRemove2Timer30ButtonPress" style="-fx-font-weight: bold;" text="Убрать 2 минуты" />
                             </items>
                         </MenuButton>
-                  <CheckBox fx:id="regimeCheckBox" mnemonicParsing="false" onAction="#onSwitchRegime" style="-fx-font-weight: bold;" text="Дуэль" textFill="lightgray" visible="false"/>
+                        <TextField fx:id="searchTF" promptText="Поиск по таблице" nodeOrientation="LEFT_TO_RIGHT" style="-fx-background-color: lightgray; -fx-prompt-text-fill: purple;" />
+                        <CheckBox fx:id="regimeCheckBox" mnemonicParsing="false" onAction="#onSwitchRegime" style="-fx-font-weight: bold;" text="Дуэль" textFill="lightgray" visible="false"/>
                     </items>
                 </ToolBar>
             </children>
@@ -77,7 +78,7 @@
                 </Tab>
                 <Tab text="Колесико">
                     <content>
-                        <StackPane fx:id="wheelSPane" style="-fx-background-image: url(resource/pics/browFat.jpg);" VBox.vgrow="ALWAYS">
+                        <StackPane fx:id="wheelSPane" VBox.vgrow="ALWAYS">
                             <children>
                                 <PieChart fx:id="wheelPC" labelLineLength="10.0" legendVisible="false" minHeight="0.0" />
                                 <VBox fx:id="cssImageVBox" focusTraversable="true" visible="false" mouseTransparent="true"/>

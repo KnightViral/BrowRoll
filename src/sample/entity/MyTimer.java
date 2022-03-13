@@ -81,7 +81,7 @@ public class MyTimer implements Serializable {
                         (long) duration.toMinutes() % 60,
                         (long) duration.toSeconds() % 60);
             } else {
-                return "BrowFat";
+                return StyleProvider.getTimerEndLabel();
             }
         }, timeSeconds));
     }

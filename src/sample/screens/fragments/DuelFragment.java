@@ -47,10 +47,19 @@ public class DuelFragment {
         VBox.setVgrow(hBox, Priority.ALWAYS);
         hBox.getChildren().add(initTable());
 
-        wheelFragment = new DuelWheelFragment(table);
-        HBox.setHgrow(wheelFragment.getNode(), Priority.ALWAYS);
-        hBox.getChildren().add(wheelFragment.getNode());
+        TabPane hiddenTabPane = new TabPane();
+        Tab hiddenTab = new Tab();
+        hiddenTabPane.getTabs().add(hiddenTab);
+        hiddenTabPane.setTabMaxHeight(0);
+        hiddenTabPane.setTabMaxWidth(0);
+        hiddenTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        hiddenTabPane.getStyleClass().add("hiddenTab");
 
+        wheelFragment = new DuelWheelFragment(table);
+        HBox.setHgrow(hiddenTabPane, Priority.ALWAYS);
+        hBox.getChildren().add(hiddenTabPane);
+
+        hiddenTab.setContent(wheelFragment.getNode());
         mainVBox.getChildren().add(hBox);
     }
 

@@ -1,0 +1,129 @@
+/*<<<<<<<<<<<<<<<<<<<<<< Table-view START >>>>>>>>>>>>>>>>>>>>>>>>*/
+.table-view {
+    -fx-background-color: DimGray;
+    -fx-background-image: url("resource/pics/bjornFat.jpg");
+    -fx-background-size: cover;
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
+}
+.table-view .column-header {
+     -fx-background-color: DimGray;
+}
+.table-view .table-cell{
+    -fx-background-color: transparent;
+    -fx-font-weight: bold;
+}
+.table-row-cell: hover {
+    -fx-background-color: white;
+    -fx-text-background-color: purple;
+}
+.table-row-cell: odd{
+    -fx-background-color: darkgray;
+}
+.table-row-cell: even{
+    -fx-background-color: gray;
+}
+.table-row-cell: important{
+    -fx-background-color: darkorange;
+}
+.table-view .column-header-background .filler {
+    -fx-background-color: transparent;
+}
+.table-view .corner {
+    -fx-background-color: darkgray;
+}
+
+.table-view .virtual-flow .scroll-bar:vertical,
+.table-view .virtual-flow .scroll-bar:vertical .track,
+.table-view .virtual-flow .scroll-bar:vertical .track-background,
+.table-view .virtual-flow .scroll-bar:horizontal,
+.table-view .virtual-flow .scroll-bar:horizontal .track,
+.table-view .virtual-flow .scroll-bar:horizontal .track-background {
+    -fx-background-color: darkgray;
+}
+.table-view .virtual-flow .scroll-bar:vertical .thumb{
+    -fx-background-color:  #575757;
+}
+.table-view .virtual-flow .scroll-bar:horizontal .thumb {
+    -fx-background-color:  #575757;
+}
+/*<<<<<<<<<<<<<<<<<<<<<< Table-view END >>>>>>>>>>>>>>>>>>>>>>>>*/
+
+/*<<<<<<<<<<<<<<<<<<<<<< Button START >>>>>>>>>>>>>>>>>>>>>>>>*/
+.button {
+    -fx-background-color: lightgray;
+    -fx-font-weight: bold;
+}
+/*<<<<<<<<<<<<<<<<<<<<<< Button END >>>>>>>>>>>>>>>>>>>>>>>>*/
+
+/*<<<<<<<<<<<<<<<<<<<<<< Tab-pane START >>>>>>>>>>>>>>>>>>>>>>>>*/
+.tab-pane .tab-header-background
+{
+    -fx-background-color: DimGray;
+}
+
+.tab-pane .tab
+{
+    -fx-background-color: lightgray;
+}
+
+.tab-pane .tab:selected
+{
+    -fx-background-color: purple;
+}
+
+.tab .tab-label {
+    -fx-font-weight: bold;
+}
+
+.tab .tab-label .{
+    -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: white;
+}
+/*<<<<<<<<<<<<<<<<<<<<<< Tab-pane END >>>>>>>>>>>>>>>>>>>>>>>>*/
+
+/*<<<<<<<<<<<<<<<<<<<<<< Pie-chart START >>>>>>>>>>>>>>>>>>>>>>>>*/
+.chart-pie-label-line {
+    -fx-stroke: white;
+    -fx-fill: white;
+}
+
+.chart-pie-label {
+    -fx-fill: white;
+    -fx-font-weight: bold;
+}
+.chart-legend {
+   -fx-background-color:  #fafad2;
+   -fx-stroke: #daa520;
+}
+/*<<<<<<<<<<<<<<<<<<<<<< Pie-chart END >>>>>>>>>>>>>>>>>>>>>>>>*/
+
+/*<<<<<<<<<<<<<<<<<<<<<< Tool-bar START >>>>>>>>>>>>>>>>>>>>>>>>*/
+.tool-bar:horizontal {
+    -fx-background: DimGray;
+}
+/*<<<<<<<<<<<<<<<<<<<<<< Tool-bar END >>>>>>>>>>>>>>>>>>>>>>>>*/
+
+/*<<<<<<<<<<<<<<<<<<<<<< Text-field START >>>>>>>>>>>>>>>>>>>>>>>>*/
+.text-field:horizontal {
+    -fx-background-color: lightgray;
+    -fx-prompt-text-fill: purple;
+}
+/*<<<<<<<<<<<<<<<<<<<<<< Text-field END >>>>>>>>>>>>>>>>>>>>>>>>*/
+
+.vboxMark {
+    -fx-background-image: url("resource/pics/mark.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
+}
+
+.vboxLongMark {
+    -fx-background-image: url("resource/pics/longMark.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
+}
