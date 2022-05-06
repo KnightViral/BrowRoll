@@ -12,9 +12,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        StyleProvider.setOwner(StyleProvider.Owners.NUKE);
+        StyleProvider.setOwner(StyleProvider.Owners.BROWJEY);
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Да, это же АУКЦыОН! Теперь со звуком!!! POG 1.2.5");
+        primaryStage.setTitle("Да, это же АУКЦыОН! Теперь со звуком!!! POG 1.2.7");
         primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("resource/pics/" + StyleProvider.getAppIcon())));
         primaryStage.show();
