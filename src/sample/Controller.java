@@ -79,6 +79,12 @@ public class Controller {
     public Tab testWheelTab;
     @FXML
     public TextField searchTF;
+    @FXML
+    public AnchorPane mainAnchorPane;
+    @FXML
+    public Label timeLabel;
+    @FXML
+    public CheckMenuItem timerLabelCB;
 
     private int idCounter;
 
@@ -112,6 +118,7 @@ public class Controller {
     private void initTimer(){
         timer = new MyTimer("main", 0, 30, 0);
         timerMenu.textProperty().bind(timer.getStringProperty());
+        timeLabel.textProperty().bind(timer.getStringProperty());
         timer.setAlarm(true);
     }
 
@@ -569,6 +576,11 @@ public class Controller {
     }
 
     @FXML
+    void onYouTubeButtonPress() {
+        newNameTA.setText(newNameTA.getText() + " (YouTube)");
+    }
+
+    @FXML
     void onClearTableButtonPress() {
         clearTable();
     }
@@ -596,6 +608,11 @@ public class Controller {
     @FXML
     void onRemove2Timer30ButtonPress() {
         timer.addSeconds(-2 * 60);
+    }
+
+    @FXML
+    void onTimerLabelVisibilityCB() {
+        timeLabel.setVisible(timerLabelCB.isSelected());
     }
 
     @FXML

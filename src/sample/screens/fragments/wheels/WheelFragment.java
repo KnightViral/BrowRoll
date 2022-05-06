@@ -122,7 +122,8 @@ public class WheelFragment {
             rollBtn.setText("Крутонуть");
             wheel.setRotate(0);
             RotateTransition rt = new RotateTransition(Duration.millis(15000), wheel);
-            rt.setByAngle(Utils.getRandomBetween(18000, 36000));
+            int rotations = Utils.getRandomBetween(100, 200);
+            rt.setByAngle(Utils.getRandomBetween(0, 359) + 360 * rotations);
             rollImg.setRotate(0);
             rollImg.setVisible(true);
             RotateTransition rtBrow = new RotateTransition(Duration.millis(15000), rollImg);

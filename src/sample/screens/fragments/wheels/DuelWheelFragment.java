@@ -103,8 +103,7 @@ public class DuelWheelFragment extends WheelFragment {
                     wheel.setRotate(0);
                     int timeSq = countAllWheelPoints() - 1;
                     double time = 15000.0;
-                    int rotateFrom = 18000;
-                    int rotateTo = 36000;
+                    int rotations = Utils.getRandomBetween(50, 100);
                     int rotateFromBrow = 720;
                     int rotateToBrow = 1920;
                     if (timeSq >= 0) {
@@ -112,13 +111,12 @@ public class DuelWheelFragment extends WheelFragment {
                             timeSq = 5;
                         }
                         time = time / timeSq;
-                        rotateFrom = rotateFrom / timeSq;
-                        rotateTo = rotateTo / timeSq;
+                        rotations = rotations / timeSq;
                         rotateFromBrow = rotateFromBrow / timeSq;
                         rotateToBrow = rotateToBrow / timeSq;
                     }
                     RotateTransition rt = new RotateTransition(Duration.millis(time), wheel);
-                    rt.setByAngle(Utils.getRandomBetween(rotateFrom, rotateTo));
+                    rt.setByAngle(Utils.getRandomBetween(0, 359) + 360 * rotations);
                     rollImg.setRotate(0);
                     rollImg.setVisible(true);
                     RotateTransition rtBrow = new RotateTransition(Duration.millis(time), rollImg);
@@ -180,11 +178,12 @@ public class DuelWheelFragment extends WheelFragment {
                     winner.setMultiplier(winner.getMultiplier() + loser.getMultiplier());
                     removeWheelPoint(loser);
                     MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("/sample/resource/" + SoundsProvider.getMKEat()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
-                    music.start(0, true);
                     track.start(0);
                     if (countAllWheelPoints() == 1) {
                         MyAudioTrack winTrack = new MyAudioTrack(this.getClass().getResource("/sample/resource/" + SoundsProvider.getMKIWin()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                         winTrack.start(0);
+                    } else {
+                        music.start(0, true);
                     }
                     break;
                 }
