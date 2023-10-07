@@ -16,7 +16,7 @@ public class DonationsTable extends TableView<Donation> {
 
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
-    private Controller parentController;
+    private final Controller parentController;
 
     public DonationsTable(Controller parentController, TableView<WheelPoint> target) {
         super();

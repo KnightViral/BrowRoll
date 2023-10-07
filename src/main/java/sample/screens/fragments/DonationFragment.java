@@ -9,7 +9,7 @@ import sample.entity.Donation;
 
 public class DonationFragment extends VBox {
 
-    private DonationsTable table;
+    private final DonationsTable table;
     private Donation donation;
     private Label username;
     private Label message;
