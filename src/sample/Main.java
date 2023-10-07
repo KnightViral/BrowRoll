@@ -10,14 +10,23 @@ import sample.entity.StyleProvider;
 
 public class Main extends Application {
 
+    private static final String VERSION = "1.2.9_snapshot";
+
+    private static final int SCENE_WIDTH = 1280;
+    private static final int SCENE_HEIGHT = 720;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         StyleProvider.setOwner(StyleProvider.Owners.BROWJEY);
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Да, это же АУКЦыОН! Теперь со звуком!!! POG 1.2.7");
-        primaryStage.setScene(new Scene(root, 1280, 720));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        Parent root = loader.load();
+        primaryStage.setTitle("Да, это же АУКЦыОН! Теперь со звуком!!! POG " + VERSION);
+        primaryStage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT));
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("resource/pics/" + StyleProvider.getAppIcon())));
         primaryStage.show();
+        Controller controller = loader.getController();
+        controller.setStage(primaryStage);
+        controller.updateUIScale(true);
     }
 
     public static void main(String[] args) {

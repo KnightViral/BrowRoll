@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
@@ -8,8 +9,8 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="mainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: DimGray;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
-    <VBox fx:id="mainVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: DimGray;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<AnchorPane fx:id="mainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: DimGray;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+    <VBox fx:id="mainVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: DimGray;">
         <children>
             <HBox style="-fx-background-color: dimgray;">
                 <children>
@@ -33,6 +34,16 @@
                         <items>
                             <MenuButton mnemonicParsing="false" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Доп.">
                                 <items>
+                                    <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                                        <content>
+                                            <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT">
+                                                <Label text="Размер интерфейса" />
+                                                <TextField fx:id="uiScalePercent" maxWidth="40" onAction="#onScalePercentChange" text="100" />
+                                                <Label text="\%" />
+                                            </HBox>
+                                        </content>
+                                    </CustomMenuItem>
+                                    <SeparatorMenuItem mnemonicParsing="false" />
                                     <MenuItem mnemonicParsing="false" onAction="#onLoadScreenButtonPress" text="Авто Энкон" />
                                     <MenuItem mnemonicParsing="false" onAction="#onSaveCurrentTableButtonPress" text="Сохранить текущую таблицу" />
                                     <MenuItem mnemonicParsing="false" onAction="#onWriteFileButtonPress" text="Запись вариантов в файл" visible="false" />
@@ -68,18 +79,23 @@
                 <tabs>
                     <Tab text="Таблица">
                         <content>
-                            <TableView fx:id="mainTable" editable="true" focusTraversable="false" VBox.vgrow="ALWAYS">
-                                <columns>
-                                    <TableColumn fx:id="idColumn" editable="false" prefWidth="100.0" resizable="false" text="ID" />
-                                    <TableColumn fx:id="nameColumn" prefWidth="100.0" text="name" />
-                                    <TableColumn fx:id="percentColumn" editable="false" prefWidth="100.0" resizable="false" text="\%" />
-                                    <TableColumn fx:id="multiplierColumn" editable="false" prefWidth="100.0" resizable="false" text="X" />
-                                    <TableColumn fx:id="addColumn" editable="false" prefWidth="100.0" resizable="false" text="+" />
-                                    <TableColumn fx:id="decreaseColumn" editable="false" prefWidth="100.0" resizable="false" text="-" />
-                                    <TableColumn fx:id="addNumberColumn" editable="false" prefWidth="100.0" resizable="false" text="add" />
-                                    <TableColumn fx:id="removeColumn" editable="false" prefWidth="100.0" text="del" />
-                                </columns>
-                            </TableView>
+                            <HBox fx:id="tablesHBox">
+                                <TableView fx:id="mainTable" editable="true" focusTraversable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="idColumn" editable="false" prefWidth="100.0" resizable="false" text="ID" />
+                                        <TableColumn fx:id="nameColumn" prefWidth="100.0" text="Название" />
+                                        <TableColumn fx:id="percentColumn" editable="false" prefWidth="100.0" resizable="false" text="\%" />
+                                        <TableColumn fx:id="multiplierColumn" editable="false" prefWidth="100.0" resizable="false" text="Сумма" />
+                                        <TableColumn fx:id="addColumn" editable="false" prefWidth="100.0" resizable="false" text="+" />
+                                        <TableColumn fx:id="decreaseColumn" editable="false" prefWidth="100.0" resizable="false" text="-" />
+                                        <TableColumn fx:id="addNumberColumn" editable="false" prefWidth="100.0" resizable="false" text="Добавить" />
+                                        <TableColumn fx:id="removeColumn" editable="false" prefWidth="100.0" text="Убрать" />
+                                    </columns>
+                                    <HBox.margin>
+                                        <Insets bottom="-1.0" left="-1.0" right="-1.0" top="-1.0" />
+                                    </HBox.margin>
+                                </TableView>
+                            </HBox>
                         </content>
                     </Tab>
                     <Tab text="Колесико">
@@ -101,7 +117,7 @@
     </VBox>
    <Label fx:id="timeLabel" alignment="CENTER" mouseTransparent="true" text="00:30:00" textAlignment="CENTER" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0">
       <font>
-         <Font name="Calibri Bold" size="64.0" />
+         <Font name="Calibri Bold" size="60.0" />
       </font>
        <effect>
            <DropShadow height="10.0" radius="4.5" spread="1.0" width="10.0">

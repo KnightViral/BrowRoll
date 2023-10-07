@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
-public class Controller {
+public class Controller implements ScalableController {
     @FXML
     public TableColumn<WheelPoint, Integer> idColumn;
     @FXML
@@ -85,6 +85,10 @@ public class Controller {
     public Label timeLabel;
     @FXML
     public CheckMenuItem timerLabelCB;
+    @FXML
+    public TextField uiScalePercent;
+    @FXML
+    public HBox tablesHBox;
 
     private int idCounter;
 
@@ -94,6 +98,17 @@ public class Controller {
 
     private MyTimer timer;
     private DuelFragment duelFragment;
+
+    public void updateUIScale(boolean initListeners) {
+        if (initListeners) {
+            getStage().getScene().widthProperty().addListener((obs, oldVal, newVal) -> applyScale(mainVBox));
+            getStage().getScene().heightProperty().addListener((obs, oldVal, newVal) -> applyScale(mainVBox));
+        }
+
+        initScale(mainVBox);
+        applyScale(mainVBox);
+        timeLabel.setStyle(String.format("-fx-font-size: %spx;", 60 * getScaleFactor())); //60 default font size
+    }
 
     @FXML
     void initialize() {
@@ -248,7 +263,7 @@ public class Controller {
             public TableCell<WheelPoint, Void> call(TableColumn param) {
                 return new TableCell<WheelPoint, Void>() {
 
-                    final Button btn = new Button("del");
+                    final Button btn = new Button("X");
 
                     @Override
                     public void updateItem(Void item, boolean empty) {
@@ -481,6 +496,16 @@ public class Controller {
         } else {
             makeRoll();
         }
+    }
+
+    @FXML
+    void onScalePercentChange() {
+        try {
+            setScaleFactor(Double.parseDouble(uiScalePercent.getText()) / 100);
+        } catch (NumberFormatException | NullPointerException ex) {
+            setScaleFactor(1.);
+        }
+        updateUIScale(false);
     }
 
     private void makeRoll() {
