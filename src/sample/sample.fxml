@@ -26,7 +26,7 @@
                             <!--                        </items>-->
                             <!--                    </MenuButton>-->
                             <TextField fx:id="newMultiplierTA" promptText="Множитель" style="-fx-background-color: lightgray; -fx-prompt-text-fill: purple;" />
-                            <Button fx:id="addBtn" mnemonicParsing="false" onAction="#onAddButtonPress" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Добавить" />
+                            <Button fx:id="addBtn" defaultButton="true" mnemonicParsing="false" onAction="#onAddButtonPress" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Добавить" />
                             <Button fx:id="kekBtn" mnemonicParsing="false" onAction="#onKekButtonPress" style="-fx-background-color: lightgray; -fx-font-weight: bold;" text="Подкрутить" textFill="#800080" />
                         </items>
                     </ToolBar>
@@ -43,6 +43,7 @@
                                             </HBox>
                                         </content>
                                     </CustomMenuItem>
+                                    <CheckMenuItem fx:id="DACheckBox" mnemonicParsing="false" onAction="#onDAConnectionChange" text="Подключить DA" />
                                     <SeparatorMenuItem mnemonicParsing="false" />
                                     <MenuItem mnemonicParsing="false" onAction="#onLoadScreenButtonPress" text="Авто Энкон" />
                                     <MenuItem mnemonicParsing="false" onAction="#onSaveCurrentTableButtonPress" text="Сохранить текущую таблицу" />
@@ -82,6 +83,7 @@
                             <HBox fx:id="tablesHBox">
                                 <TableView fx:id="mainTable" editable="true" focusTraversable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                                     <columns>
+                                        <TableColumn fx:id="indexColumn" editable="false" prefWidth="100.0" resizable="false" />
                                         <TableColumn fx:id="idColumn" editable="false" prefWidth="100.0" resizable="false" text="ID" />
                                         <TableColumn fx:id="nameColumn" prefWidth="100.0" text="Название" />
                                         <TableColumn fx:id="percentColumn" editable="false" prefWidth="100.0" resizable="false" text="\%" />

@@ -10,7 +10,7 @@ import sample.entity.StyleProvider;
 
 public class Main extends Application {
 
-    private static final String VERSION = "1.2.9_snapshot";
+    private static final String VERSION = "1.2.10_snapshot";
 
     private static final int SCENE_WIDTH = 1280;
     private static final int SCENE_HEIGHT = 720;

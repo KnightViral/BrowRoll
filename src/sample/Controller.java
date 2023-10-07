@@ -1,9 +1,11 @@
 package sample;
 
 import javafx.animation.RotateTransition;
+import javafx.application.Platform;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
@@ -20,6 +22,7 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.scene.image.Image;
 import sample.entity.*;
+import sample.screens.fragments.DonationsTable;
 import sample.screens.fragments.DuelFragment;
 
 import javax.sound.sampled.AudioSystem;
@@ -31,6 +34,8 @@ import java.util.*;
 import java.util.List;
 
 public class Controller implements ScalableController {
+    @FXML
+    public TableColumn<WheelPoint, Void> indexColumn;
     @FXML
     public TableColumn<WheelPoint, Integer> idColumn;
     @FXML
@@ -89,6 +94,8 @@ public class Controller implements ScalableController {
     public TextField uiScalePercent;
     @FXML
     public HBox tablesHBox;
+    @FXML
+    public CheckMenuItem DACheckBox;
 
     private int idCounter;
 
@@ -98,6 +105,7 @@ public class Controller implements ScalableController {
 
     private MyTimer timer;
     private DuelFragment duelFragment;
+    private DonationsTable donationsTable;
 
     public void updateUIScale(boolean initListeners) {
         if (initListeners) {
@@ -120,9 +128,16 @@ public class Controller implements ScalableController {
         initTimer();
         randomKekCheckBox.setSelected(false);
         initTestWheelTab();
+        initDonationsTable();
 
         searchTF.textProperty().addListener(
                 (observable, oldValue, newValue) -> mainTable.refresh());
+    }
+
+    private void initDonationsTable() {
+        donationsTable = new DonationsTable(this, mainTable);
+        tablesHBox.getChildren().add(donationsTable);
+        donationsTable.setHidden(true);
     }
 
     private void initTestWheelTab() {
@@ -153,6 +168,7 @@ public class Controller implements ScalableController {
     }
 
     private void initTable() {
+        initIndexColumn();
         initIdColumn();
         initNameColumn();
         initPercentColumn();
@@ -163,6 +179,27 @@ public class Controller implements ScalableController {
         initRemoveColumn();
         mainTable.getStylesheets().add(getClass().getResource(StyleProvider.getStyle()).toExternalForm());
         sort();
+    }
+
+    private void initIndexColumn() {
+        indexColumn.setVisible(true);
+        indexColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.015));
+        indexColumn.setCellFactory(new Callback<TableColumn<WheelPoint, Void>, TableCell<WheelPoint, Void>>() {
+            @Override
+            public TableCell<WheelPoint, Void> call(TableColumn param) {
+                return new TableCell<WheelPoint, Void>() {
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (getIndex() < mainTable.getItems().size()) {
+                            setAlignment(Pos.CENTER);
+                            setText(String.valueOf(getIndex() + 1));
+                        }
+                    }
+                };
+            }
+        });
     }
 
     private void initIdColumn() {
@@ -180,9 +217,9 @@ public class Controller implements ScalableController {
                 }
         );
         if (idColumn.isVisible())
-            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.70));
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.685));
         else
-            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.75));
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.735));
     }
 
     private void initMultiplierColumn() {
@@ -268,6 +305,7 @@ public class Controller implements ScalableController {
                     @Override
                     public void updateItem(Void item, boolean empty) {
                         super.updateItem(item, empty);
+                        setAlignment(Pos.CENTER);
                         if (empty) {
                             setGraphic(null);
                         } else {
@@ -326,7 +364,9 @@ public class Controller implements ScalableController {
                             tf.setPrefHeight(21);
                             tf.setMinHeight(21);
                             tf.setPrefWidth(60);
-                            setGraphic(new HBox(tf, btn));
+                            HBox wrap = new HBox(tf, btn);
+                            wrap.setAlignment(Pos.CENTER);
+                            setGraphic(wrap);
                         }
                         setText(null);
                     }
@@ -345,6 +385,7 @@ public class Controller implements ScalableController {
                     @Override
                     public void updateItem(Void item, boolean empty) {
                         super.updateItem(item, empty);
+                        setAlignment(Pos.CENTER);
                         if (getIndex() >= 0 &&
                                 mainTable.getItems().size() > getIndex() &&
                                 countMultiplier > 0 &&
@@ -384,7 +425,7 @@ public class Controller implements ScalableController {
         } else {
             mainTable.getItems().add(wheelPoint);
         }
-        mainTable.refresh();
+        Platform.runLater(() -> mainTable.refresh());
     }
 
     private void removeFromTable(WheelPoint wheelPoint) {
@@ -424,6 +465,14 @@ public class Controller implements ScalableController {
                 onKekButtonPress();
             }
         }
+    }
+
+    //todo тут какая-то дичь в купе с onAddButtonPress. Надо все привести в порядок
+    public void addWheelPoint(String text, double multiplier) {
+        addToTable(new WheelPoint(idCounter, text, multiplier));
+        idCounter++;
+        sort();
+        countAllMultipliers();
     }
 
     @FXML
@@ -506,6 +555,13 @@ public class Controller implements ScalableController {
             setScaleFactor(1.);
         }
         updateUIScale(false);
+        Platform.runLater(() -> tablesHBox.requestLayout());
+    }
+
+    @FXML
+    void onDAConnectionChange() {
+        donationsTable.setHidden(DACheckBox.isSelected());
+        Platform.runLater(() -> tablesHBox.requestLayout());
     }
 
     private void makeRoll() {
@@ -568,9 +624,9 @@ public class Controller implements ScalableController {
         addNumberColumn.setVisible(false);
         newMultiplierTA.setPromptText("Множитель");
         if (idColumn.isVisible())
-            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.65));
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.635));
         else
-            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.70));
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.685));
     }
 
     @FXML
@@ -580,9 +636,9 @@ public class Controller implements ScalableController {
         addNumberColumn.setVisible(true);
         newMultiplierTA.setPromptText("Сумма");
         if (idColumn.isVisible())
-            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.65));
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.635));
         else
-            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.70));
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.685));
     }
 
     @FXML
@@ -692,7 +748,7 @@ public class Controller implements ScalableController {
         timer.setTime(0,30,0);
     }
 
-    private void sort() {
+    public void sort() {
         multiplierColumn.setSortType(TableColumn.SortType.DESCENDING);
         mainTable.getSortOrder().clear();
         mainTable.getSortOrder().add(multiplierColumn);
@@ -735,7 +791,7 @@ public class Controller implements ScalableController {
         return null;
     }
 
-    private double countAllMultipliers() {
+    public double countAllMultipliers() {
         double counter = 0;
         for (WheelPoint wheelPoint : mainTable.getItems()) {
             if (wheelPoint.getId() != JokeGenerator.getJokeId()) {
