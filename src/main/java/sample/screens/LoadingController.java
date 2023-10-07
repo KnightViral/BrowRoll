@@ -19,7 +19,6 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.Date;
 
 public class LoadingController {
 
@@ -44,7 +43,7 @@ public class LoadingController {
         initDateColumn();
         initLoadBtnColumn();
         initFileBtnColumn();
-        mainTable.getStylesheets().add(getClass().getResource("/sample/" + StyleProvider.getStyle()).toExternalForm());
+        mainTable.getStylesheets().add(getClass().getResource(StyleProvider.getStyle()).toExternalForm());
         fillTable();
         mainTable.getItems().sort(Comparator.comparing(RollSave::getDate, Comparator.nullsLast(Comparator.reverseOrder())));
     }
@@ -79,7 +78,7 @@ public class LoadingController {
                                     save.getName().equals("Начало дуэли. Автосохранение.")
                                             || save.getName().equals("Включен режим дуэли. Автосохранение."));
                             btn.setOnAction(event -> {
-                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/screens/historycontroller.fxml"));
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/screens/historycontroller.fxml"));
                                 Stage stage = new Stage(StageStyle.DECORATED);
                                 try {
                                     stage.setScene(new Scene(loader.load())
