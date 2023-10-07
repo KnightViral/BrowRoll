@@ -42,7 +42,11 @@ public class WheelPoint {
 
     public void setMultiplier(double multiplier) {
         this.multiplier = multiplier;
-        wheelData.setPieValue(multiplier);
+        if (multiplier > 0) {
+            wheelData.setPieValue(multiplier);
+        } else {
+            wheelData.setPieValue(0);
+        }
         updateWheelTooltip();
     }
 
@@ -71,7 +75,7 @@ public class WheelPoint {
     }
 
     public void generateWheelData(){
-        this.wheelData = new PieChart.Data(shortenWheelName(name), multiplier);
+        this.wheelData = new PieChart.Data(shortenWheelName(name), multiplier > 0 ? multiplier : 0);
     }
 
     public WheelPointSave save() {

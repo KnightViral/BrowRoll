@@ -794,7 +794,7 @@ public class Controller implements ScalableController {
     public double countAllMultipliers() {
         double counter = 0;
         for (WheelPoint wheelPoint : mainTable.getItems()) {
-            if (wheelPoint.getId() != JokeGenerator.getJokeId()) {
+            if (wheelPoint.getId() != JokeGenerator.getJokeId() && wheelPoint.getMultiplier() > 0) {
                 counter = counter + wheelPoint.getMultiplier();
             }
         }

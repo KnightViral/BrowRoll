@@ -103,8 +103,10 @@ public class DuelFragment {
         toolBar.getItems().add(stopBtn);
         SaveLoadWizard.save(sourceTable, "Начало дуэли. Автосохранение.");
         sourceTable.getItems().forEach(item -> {
-            WheelPoint clone = new WheelPoint(item.getId(), item.getName(), item.getMultiplier());
-            wheelFragment.addToTable(clone);
+            if (item.getMultiplier() > 0) {
+                WheelPoint clone = new WheelPoint(item.getId(), item.getName(), item.getMultiplier());
+                wheelFragment.addToTable(clone);
+            }
         });
         sort();
         wheelFragment.startDuel(true);
