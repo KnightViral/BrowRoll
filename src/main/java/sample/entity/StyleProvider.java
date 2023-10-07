@@ -77,12 +77,12 @@ public class StyleProvider {
     public static String getStyle() {
         switch (globalOwner) {
             case UNCLEBJORN:
-                return "uncleStyle.css";
+                return "/styles/uncleStyle.css";
             case NUKE:
-                return "nukeStyle.css";
+                return "/styles/nukeStyle.css";
             case BROWJEY:
             default:
-                return "browStyle.css";
+                return "/styles/browStyle.css";
         }
     }
 }

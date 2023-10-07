@@ -164,7 +164,7 @@ public class Controller implements ScalableController {
     private void initWheelTab() {
         cssImageVBox.getStylesheets().add(getClass().getResource(StyleProvider.getStyle()).toExternalForm());
         cssImageVBox.getStyleClass().add("vboxMark");
-        browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/" + StyleProvider.getRollPic()))));
+        browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("/pics/" + StyleProvider.getRollPic()))));
     }
 
     private void initTable() {
@@ -531,7 +531,7 @@ public class Controller implements ScalableController {
     @FXML
     void onTestSoundButtonPress() {
         try {
-            MyAudioTrack trackFinish = new MyAudioTrack(this.getClass().getResource("resource/" + SoundsProvider.getSound()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+            MyAudioTrack trackFinish = new MyAudioTrack(this.getClass().getResource("/" + SoundsProvider.getSound()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
             trackFinish.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -576,14 +576,14 @@ public class Controller implements ScalableController {
             rtBrow.setByAngle(-Utils.getRandomBetween(720, 1920));
             Controller c = this;
             try {
-                MyAudioTrack track = new MyAudioTrack(c.getClass().getResource("resource/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                MyAudioTrack track = new MyAudioTrack(c.getClass().getResource("/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                 track.start(0, true);
                 rt.setOnFinished(event -> {
                     WheelPoint winner = checkRollWinner();
                     String winnerName = getWheelPointNameNotNull(winner);
                     rollBtn.setText(winnerName);
                     track.stop();
-                    MyAudioTrack trackFinish = new MyAudioTrack(c.getClass().getResource("resource/" + SoundsProvider.getSound()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                    MyAudioTrack trackFinish = new MyAudioTrack(c.getClass().getResource("/" + SoundsProvider.getSound()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                     trackFinish.start();
                     try { //todo EXCEPTION
                         SaveLoadWizard.save(mainTable, winnerName);
@@ -955,7 +955,7 @@ public class Controller implements ScalableController {
     }
 
     private void openLoadScreen() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("screens/loadingcontroller.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/screens/loadingcontroller.fxml"));
         Stage stage = new Stage(StageStyle.DECORATED);
         try {
             stage.setScene(new Scene(loader.load())
@@ -989,19 +989,19 @@ public class Controller implements ScalableController {
         needsEating = false;
         winner = null;
         if (music == null) {
-            music = new MyAudioTrack(this.getClass().getResource("resource/" + SoundsProvider.getMKMusic()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+            music = new MyAudioTrack(this.getClass().getResource("/" + SoundsProvider.getMKMusic()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
         }
         if (duelRegime) {
             SaveLoadWizard.save(mainTable, "Включен режим дуэли. Автосохранение.");
-            browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/" + StyleProvider.getDuelRollPic()))));
+            browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("/pics/" + StyleProvider.getDuelRollPic()))));
             calculateWheelDuel(countAllWheelPoints());
-            MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("resource/" + SoundsProvider.getMKChoose()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+            MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("/" + SoundsProvider.getMKChoose()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
             track.start(0);
             music.start(0, true);
         } else {
-            browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("resource/pics/" + StyleProvider.getRollPic()))));
+            browRollImg.setImage(new Image(String.valueOf(this.getClass().getResource("/pics/" + StyleProvider.getRollPic()))));
             calculateWheel(countAllMultipliers());
-            MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("resource/" + SoundsProvider.getSlap()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+            MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("/" + SoundsProvider.getSlap()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
             track.start();
             music.close();
         }
@@ -1084,14 +1084,14 @@ public class Controller implements ScalableController {
                     rtBrow.setByAngle(-Utils.getRandomBetween(rotateFromBrow, rotateToBrow));
                     Controller c = this;
                     try {
-                        MyAudioTrack track = new MyAudioTrack(c.getClass().getResource("resource/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                        MyAudioTrack track = new MyAudioTrack(c.getClass().getResource("/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                         track.start(0, true);
                         rt.setOnFinished(event -> {
                             WheelPoint winner = checkRollWinner();
                             String winnerName = getWheelPointNameNotNull(winner);
                             rollBtn.setText(winnerName);
                             track.stop();
-                            MyAudioTrack trackFinish = new MyAudioTrack(c.getClass().getResource("resource/" + SoundsProvider.getMKHit()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                            MyAudioTrack trackFinish = new MyAudioTrack(c.getClass().getResource("/" + SoundsProvider.getMKHit()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                             trackFinish.start(0);
                             needsEating = true;
                             this.winner = winner;
@@ -1134,10 +1134,10 @@ public class Controller implements ScalableController {
                 if (loser != null) {
                     winner.setMultiplier(winner.getMultiplier() + loser.getMultiplier());
                     removeFromTable(loser);
-                    MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("resource/" + SoundsProvider.getMKEat()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                    MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("/" + SoundsProvider.getMKEat()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                     track.start(0);
                     if (countAllWheelPoints() == 1) {
-                        MyAudioTrack winTrack = new MyAudioTrack(this.getClass().getResource("resource/" + SoundsProvider.getMKIWin()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                        MyAudioTrack winTrack = new MyAudioTrack(this.getClass().getResource("/" + SoundsProvider.getMKIWin()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                         winTrack.start(0);
                     }
                     break;

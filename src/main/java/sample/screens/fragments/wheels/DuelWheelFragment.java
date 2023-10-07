@@ -22,10 +22,10 @@ public class DuelWheelFragment extends WheelFragment {
 
     public DuelWheelFragment(TableView<WheelPoint> table) {
         super(table);
-        rollImg.setImage(new Image(String.valueOf(this.getClass().getResource("/sample/resource/pics/" + StyleProvider.getDuelRollPic()))));
+        rollImg.setImage(new Image(String.valueOf(this.getClass().getResource("/pics/" + StyleProvider.getDuelRollPic()))));
         pointerVBox.getStyleClass().clear();
         pointerVBox.getStyleClass().add("vboxLongMark");
-        music = new MyAudioTrack(this.getClass().getResource("/sample/resource/" + SoundsProvider.getMKMusic()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+        music = new MyAudioTrack(this.getClass().getResource("/" + SoundsProvider.getMKMusic()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
     }
 
     public void startDuel(boolean duelInProgress){
@@ -34,13 +34,13 @@ public class DuelWheelFragment extends WheelFragment {
         needsEating = false;
         if (duelInProgress) {
             calculateWheel(countAllWheelPoints());
-            MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("/sample/resource/" + SoundsProvider.getMKChoose()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+            MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("/" + SoundsProvider.getMKChoose()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
             track.start(0);
             music.start(0, true);
         } else {
             rollBtn.setVisible(false);
             clearWheel();
-            MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("/sample/resource/" + SoundsProvider.getSlap()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+            MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("/" + SoundsProvider.getSlap()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
             track.start();
             music.close();
         }
@@ -123,7 +123,7 @@ public class DuelWheelFragment extends WheelFragment {
                     rtBrow.setByAngle(-Utils.getRandomBetween(rotateFromBrow, rotateToBrow));
                     WheelFragment owner = this;
                     try {
-                        MyAudioTrack track = new MyAudioTrack(owner.getClass().getResource("/sample/resource/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                        MyAudioTrack track = new MyAudioTrack(owner.getClass().getResource("/ORA ORA ORA Vs MUDA MUDA MUDA.wav"), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                         track.start(0, true);
                         rt.setOnFinished(event -> {
                             WheelPoint winner = checkRollWinner();
@@ -131,9 +131,9 @@ public class DuelWheelFragment extends WheelFragment {
                             rollBtn.setText(winnerName);
                             track.stop();
                             music.stop();
-                            MyAudioTrack trackFinish = new MyAudioTrack(owner.getClass().getResource("/sample/resource/" + SoundsProvider.getMKHit()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                            MyAudioTrack trackFinish = new MyAudioTrack(owner.getClass().getResource("/" + SoundsProvider.getMKHit()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                             trackFinish.start(0);
-                            MyAudioTrack trackFinishSecond = new MyAudioTrack(owner.getClass().getResource("/sample/resource/" + SoundsProvider.getSound()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                            MyAudioTrack trackFinishSecond = new MyAudioTrack(owner.getClass().getResource("/" + SoundsProvider.getSound()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                             trackFinishSecond.start();
                             needsEating = true;
                             this.winner = winner;
@@ -177,10 +177,10 @@ public class DuelWheelFragment extends WheelFragment {
                 if (loser != null) {
                     winner.setMultiplier(winner.getMultiplier() + loser.getMultiplier());
                     removeWheelPoint(loser);
-                    MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("/sample/resource/" + SoundsProvider.getMKEat()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                    MyAudioTrack track = new MyAudioTrack(this.getClass().getResource("/" + SoundsProvider.getMKEat()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                     track.start(0);
                     if (countAllWheelPoints() == 1) {
-                        MyAudioTrack winTrack = new MyAudioTrack(this.getClass().getResource("/sample/resource/" + SoundsProvider.getMKIWin()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
+                        MyAudioTrack winTrack = new MyAudioTrack(this.getClass().getResource("/" + SoundsProvider.getMKIWin()), Collections.singletonList(Arrays.stream(AudioSystem.getMixerInfo()).iterator().next()));
                         winTrack.start(0);
                     } else {
                         music.start(0, true);

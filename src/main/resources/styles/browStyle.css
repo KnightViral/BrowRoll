@@ -1,7 +1,7 @@
 /*<<<<<<<<<<<<<<<<<<<<<< Table-view START >>>>>>>>>>>>>>>>>>>>>>>>*/
 .table-view {
     -fx-background-color: DimGray;
-    -fx-background-image: url("resource/pics/browFat.jpg");
+    -fx-background-image: url("/pics/browFat.jpg");
     -fx-background-size: cover;
     -fx-background-repeat: stretch;
     -fx-background-position: center center;
@@ -115,14 +115,14 @@
 /*<<<<<<<<<<<<<<<<<<<<<< Text-field END >>>>>>>>>>>>>>>>>>>>>>>>*/
 
 .vboxMark {
-    -fx-background-image: url("resource/pics/mark.png");
+    -fx-background-image: url("/pics/mark.png");
     -fx-background-size: contain;
     -fx-background-repeat: stretch;
     -fx-background-position: center center;
 }
 
 .vboxLongMark {
-    -fx-background-image: url("resource/pics/longMark.png");
+    -fx-background-image: url("/pics/longMark.png");
     -fx-background-size: contain;
     -fx-background-repeat: stretch;
     -fx-background-position: center center;
