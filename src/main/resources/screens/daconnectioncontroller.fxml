@@ -9,7 +9,7 @@
    <Button layoutX="68.0" layoutY="71.0" mnemonicParsing="false" onAction="#onConnect" text="Подключиться" />
    <Label fx:id="resultLabel" layoutX="32.0" layoutY="110.0" prefHeight="17.0" prefWidth="173.0" textAlignment="CENTER" alignment="CENTER" />
    <Label layoutX="9.0" layoutY="15.0" text="1." />
-   <Label layoutX="9.0" layoutY="45.0" text="3." />
-   <Label layoutX="9.0" layoutY="75.0" text="2." />
+   <Label layoutX="9.0" layoutY="45.0" text="2." />
+   <Label layoutX="9.0" layoutY="75.0" text="3." />
    <Label layoutX="9.0" layoutY="110.0" text="4." />
 </AnchorPane>
