@@ -1,7 +1,9 @@
 package sample.screens.fragments;
 
 import javafx.application.Platform;
+import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.HBox;
@@ -19,13 +21,15 @@ public class DonationsTable extends TableView<Donation> {
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
     private final Controller parentController;
+    private final TableView<WheelPoint> targetTable;
     private DonationAlertsConnection connection;
 
     public DonationsTable(Controller parentController, TableView<WheelPoint> target) {
         super();
         this.parentController = parentController;
-        initialize();
+        this.targetTable = target;
         setTargetTable(target);
+        initialize();
     }
 
     void initialize() {
@@ -99,6 +103,7 @@ public class DonationsTable extends TableView<Donation> {
                     if (row.getIndex() != (Integer) db.getContent(SERIALIZED_MIME_TYPE)) {
                         event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                         event.consume();
+                        targetTable.refresh();
                     }
                 }
             });
@@ -114,6 +119,13 @@ public class DonationsTable extends TableView<Donation> {
             row.setOnDragOver(event -> {
                 Dragboard db = event.getDragboard();
                 if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+                    if (!row.isEmpty()) {
+                        for (Node node : table.lookupAll(".table-row-cell")) {
+                            if (node instanceof TableRow) {
+                                node.pseudoClassStateChanged(PseudoClass.getPseudoClass("important"), ((TableRow<?>) node).getIndex() == row.getIndex());
+                            }
+                        }
+                    }
                     event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                     event.consume();
                 }
@@ -133,9 +145,12 @@ public class DonationsTable extends TableView<Donation> {
                         dropIndex = row.getIndex();
                     }
 
-                    WheelPoint wheelPoint = table.getItems().get(dropIndex);
-                    wheelPoint.setMultiplier(wheelPoint.getMultiplier() + dragged.getAmount());
-
+                    if (table.getItems().size() > dropIndex) {
+                        WheelPoint wheelPoint = table.getItems().get(dropIndex);
+                        wheelPoint.setMultiplier(wheelPoint.getMultiplier() + dragged.getAmount());
+                    } else {
+                        addWheelPoint(dragged.getMessage(), dragged.getAmount());
+                    }
                     event.setDropCompleted(true);
                     event.consume();
                 }

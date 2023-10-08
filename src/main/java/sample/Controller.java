@@ -187,7 +187,7 @@ public class Controller implements ScalableController {
 
     private void initIndexColumn() {
         indexColumn.setVisible(true);
-        indexColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.015));
+        indexColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.035));
         indexColumn.setCellFactory(new Callback<TableColumn<WheelPoint, Void>, TableCell<WheelPoint, Void>>() {
             @Override
             public TableCell<WheelPoint, Void> call(TableColumn param) {
@@ -221,9 +221,9 @@ public class Controller implements ScalableController {
                 }
         );
         if (idColumn.isVisible())
-            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.685));
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.645));
         else
-            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.735));
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.715));
     }
 
     private void initMultiplierColumn() {
@@ -632,9 +632,9 @@ public class Controller implements ScalableController {
         addNumberColumn.setVisible(false);
         newMultiplierTA.setPromptText("Множитель");
         if (idColumn.isVisible())
-            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.635));
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.615));
         else
-            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.685));
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.665));
     }
 
     @FXML
@@ -644,9 +644,9 @@ public class Controller implements ScalableController {
         addNumberColumn.setVisible(true);
         newMultiplierTA.setPromptText("Сумма");
         if (idColumn.isVisible())
-            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.635));
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.615));
         else
-            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.685));
+            nameColumn.prefWidthProperty().bind(mainTable.widthProperty().multiply(0.665));
     }
 
     @FXML
