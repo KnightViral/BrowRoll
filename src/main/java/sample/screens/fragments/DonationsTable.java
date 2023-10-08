@@ -8,15 +8,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import org.json.JSONObject;
 import sample.Controller;
 import sample.entity.Donation;
 import sample.entity.WheelPoint;
+import sample.services.DonationAlertsConnection;
 
 public class DonationsTable extends TableView<Donation> {
 
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
     private final Controller parentController;
+    private DonationAlertsConnection connection;
 
     public DonationsTable(Controller parentController, TableView<WheelPoint> target) {
         super();
@@ -158,5 +161,24 @@ public class DonationsTable extends TableView<Donation> {
 
     public void addWheelPoint(String text, double value) {
         parentController.addWheelPoint(text, value);
+    }
+
+    public void addDonation(Donation donation) {
+        getItems().add(donation);
+        setHidden(false);
+    }
+
+    public void setConnection(DonationAlertsConnection connection) {
+        if (this.connection != connection) {
+            this.connection = connection;
+            connection.addMessageHandler(message -> {
+                try {
+                    addDonation(new Donation(new JSONObject(message)));
+                } catch (Exception e) {
+                    System.out.println("Failed to parse Donation.");
+                }
+            });
+        }
+
     }
 }

@@ -1,5 +1,7 @@
 package sample.entity;
 
+import org.json.JSONObject;
+
 import java.util.UUID;
 
 public class Donation {
@@ -11,6 +13,15 @@ public class Donation {
 
     public Donation() {
         this.id = UUID.randomUUID();
+    }
+
+    public Donation(JSONObject json) throws org.json.JSONException {
+        this.id = UUID.randomUUID();
+        JSONObject data = json.getJSONObject("result").getJSONObject("data").getJSONObject("data");
+        username = data.getString("username");
+        amount = data.getDouble("amount");
+        currency = data.getString("currency");
+        message = data.getString("message");
     }
 
     public UUID getId() {

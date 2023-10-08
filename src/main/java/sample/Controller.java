@@ -22,8 +22,10 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.scene.image.Image;
 import sample.entity.*;
+import sample.screens.DAConnectionController;
 import sample.screens.fragments.DonationsTable;
 import sample.screens.fragments.DuelFragment;
+import sample.services.DonationAlertsConnection;
 
 import javax.sound.sampled.AudioSystem;
 import java.io.*;
@@ -95,7 +97,7 @@ public class Controller implements ScalableController {
     @FXML
     public HBox tablesHBox;
     @FXML
-    public CheckMenuItem DACheckBox;
+    public MenuItem DAConnectionBtn;
 
     private int idCounter;
 
@@ -106,6 +108,7 @@ public class Controller implements ScalableController {
     private MyTimer timer;
     private DuelFragment duelFragment;
     private DonationsTable donationsTable;
+    private DonationAlertsConnection daConnection;
 
     public void updateUIScale(boolean initListeners) {
         if (initListeners) {
@@ -559,8 +562,12 @@ public class Controller implements ScalableController {
     }
 
     @FXML
-    void onDAConnectionChange() {
-        donationsTable.setHidden(DACheckBox.isSelected());
+    void onDAConnectionButtonPress() {
+        if (daConnection == null) {
+            daConnection = new DonationAlertsConnection();
+        }
+        openDAConnectionScreen(daConnection);
+        donationsTable.setConnection(daConnection);
         Platform.runLater(() -> tablesHBox.requestLayout());
     }
 
@@ -958,14 +965,28 @@ public class Controller implements ScalableController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/screens/loadingcontroller.fxml"));
         Stage stage = new Stage(StageStyle.DECORATED);
         try {
-            stage.setScene(new Scene(loader.load())
-            );
+            stage.setScene(new Scene(loader.load()));
         } catch (IOException e) {
             //todo exceptions
             e.printStackTrace();
         }
         stage.setTitle("Логи ауков");
 
+        stage.show();
+    }
+
+    private void openDAConnectionScreen(DonationAlertsConnection connection) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/screens/daconnectioncontroller.fxml"));
+        Stage stage = new Stage(StageStyle.DECORATED);
+        try {
+            stage.setScene(new Scene(loader.load()));
+        } catch (IOException e) {
+            //todo exceptions
+            e.printStackTrace();
+        }
+        stage.setTitle("Подключение к DonationAlerts");
+        DAConnectionController controller = loader.getController();
+        controller.setConnection(connection);
         stage.show();
     }
 

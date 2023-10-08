@@ -43,7 +43,7 @@
                                             </HBox>
                                         </content>
                                     </CustomMenuItem>
-                                    <CheckMenuItem fx:id="DACheckBox" mnemonicParsing="false" onAction="#onDAConnectionChange" text="Подключить DA" />
+                                    <MenuItem fx:id="DAConnectionBtn" mnemonicParsing="false" onAction="#onDAConnectionButtonPress" text="Подключить DA" />
                                     <SeparatorMenuItem mnemonicParsing="false" />
                                     <MenuItem mnemonicParsing="false" onAction="#onLoadScreenButtonPress" text="Авто Энкон" />
                                     <MenuItem mnemonicParsing="false" onAction="#onSaveCurrentTableButtonPress" text="Сохранить текущую таблицу" />
