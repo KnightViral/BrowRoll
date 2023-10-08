@@ -122,6 +122,14 @@ public class Controller implements ScalableController {
         timeLabel.setStyle(String.format("-fx-font-size: %spx;", 60 * getScaleFactor())); //60 default font size
     }
 
+    public void loadScaleSettings() {
+        Object scale = SaveLoadWizard.loadObject(ScalableController.SETTINGS_FILE_NAME);
+        if (scale != null) {
+            uiScalePercent.setText(scale.toString());
+            onScalePercentChange();
+        }
+    }
+
     @FXML
     void initialize() {
         initTable();
@@ -555,6 +563,7 @@ public class Controller implements ScalableController {
     void onScalePercentChange() {
         try {
             setScaleFactor(Double.parseDouble(uiScalePercent.getText()) / 100);
+            SaveLoadWizard.saveObject(uiScalePercent.getText(), ScalableController.SETTINGS_FILE_NAME);
         } catch (NumberFormatException | NullPointerException ex) {
             setScaleFactor(1.);
         }

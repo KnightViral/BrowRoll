@@ -9,6 +9,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public interface ScalableController {
 
+    String SETTINGS_FILE_NAME = "scale_setting";
+
     AtomicReference<Double> scaleFactor = new AtomicReference<>((double) 1);
     AtomicReference<Stage> stage = new AtomicReference<>(null);
 
