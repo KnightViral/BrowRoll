@@ -16,6 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
@@ -987,7 +988,14 @@ public class Controller implements ScalableController {
         stage.setTitle("Подключение к DonationAlerts");
         DAConnectionController controller = loader.getController();
         controller.setConnection(connection);
+        stage.setResizable(false);
         stage.show();
+        stage.setWidth(250 * getScaleFactor());
+        stage.setHeight(180 * getScaleFactor());
+        Scale scale = new Scale(scaleFactor.get(), scaleFactor.get());
+        scale.setPivotX(0);
+        scale.setPivotY(0);
+        stage.getScene().getRoot().getTransforms().setAll(scale);
     }
 
     //=============================================================================================================================================================

@@ -35,6 +35,22 @@ public class SaveLoadWizard {
         }
     }
 
+    public static void saveObject(Object object, String fileName) {
+        System.out.println("Saving");
+        try {
+            Files.createDirectories(Paths.get(Utils.getLocalAppData() + "\\" + FILE_NAME + "\\"));
+            File longTermSave = new File(fileName);
+            FileOutputStream fos = new FileOutputStream(Utils.getLocalAppData() + "\\" + FILE_NAME + "\\" + longTermSave.getName());
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(object);
+            oos.flush();
+            oos.close();
+        } catch (IOException e) {
+            //todo exception
+            e.printStackTrace();
+        }
+    }
+
     public static RollSave load(String fileName) {
         System.out.println("Loading");
         RollSave rollSave = null;
@@ -49,6 +65,22 @@ public class SaveLoadWizard {
             e.printStackTrace();
         }
         return rollSave;
+    }
+
+    public static Object loadObject(String fileName) {
+        System.out.println("Loading");
+        Object obj = null;
+        try {
+            FileInputStream fis = new FileInputStream(Utils.getLocalAppData() + "\\" + FILE_NAME + "\\" + fileName);
+            ObjectInputStream oin = new ObjectInputStream(fis);
+            obj = oin.readObject();
+            fis.close();
+            oin.close();
+        } catch (IOException | ClassNotFoundException e) {
+            //todo exception
+            e.printStackTrace();
+        }
+        return obj;
     }
 
     public static String getFileName() {

@@ -156,7 +156,7 @@ public class DonationAlertsConnection {
                 query_pairs.put(URLDecoder.decode(pair.substring(0, idx), StandardCharsets.UTF_8.toString()),
                         URLDecoder.decode(pair.substring(idx + 1), StandardCharsets.UTF_8.toString()));
             }
-        } catch (MalformedURLException | UnsupportedEncodingException e) {
+        } catch (MalformedURLException | UnsupportedEncodingException | NullPointerException e) {
             e.printStackTrace();
         }
         return query_pairs;

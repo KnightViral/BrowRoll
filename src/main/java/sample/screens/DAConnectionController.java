@@ -3,8 +3,10 @@ package sample.screens;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import sample.Utils;
+import sample.entity.SaveLoadWizard;
 import sample.services.DonationAlertsConnection;
 
 public class DAConnectionController {
@@ -13,11 +15,20 @@ public class DAConnectionController {
     public TextField urlTF;
     @FXML
     public Label resultLabel;
+    @FXML
+    public AnchorPane mainPane;
+
+    private final static String TOKEN_FILENAME = "token";
 
     private DonationAlertsConnection connection;
 
     @FXML
-    void initialize() {}
+    void initialize() {
+        Object token = SaveLoadWizard.loadObject(TOKEN_FILENAME);
+        if (token != null) {
+            urlTF.setText(token.toString());
+        }
+    }
 
     @FXML
     public void onOpenRequest() {
@@ -26,7 +37,8 @@ public class DAConnectionController {
 
     @FXML
     public void onConnect() {
-        if (connection.connect(urlTF.getText())) {
+        if (!urlTF.getText().isEmpty() && connection.connect(urlTF.getText())) {
+            SaveLoadWizard.saveObject(urlTF.getText(), TOKEN_FILENAME);
             resultLabel.setText("Вы замечательны");
             resultLabel.setTextFill(Color.rgb(0, 225, 0));
         } else {
