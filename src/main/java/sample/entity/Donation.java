@@ -18,10 +18,18 @@ public class Donation {
     public Donation(JSONObject json) throws org.json.JSONException {
         this.id = UUID.randomUUID();
         JSONObject data = json.getJSONObject("result").getJSONObject("data").getJSONObject("data");
-        username = data.getString("username");
         amount = data.getDouble("amount");
         currency = data.getString("currency");
-        message = data.getString("message");
+        try {
+            username = data.getString("username");
+        } catch (Exception e) {
+            username = "Аноним";
+        }
+        try {
+            message = data.getString("message");
+        } catch (Exception e) {
+            message = "";
+        }
     }
 
     public UUID getId() {
