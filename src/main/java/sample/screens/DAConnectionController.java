@@ -18,7 +18,7 @@ public class DAConnectionController {
     @FXML
     public AnchorPane mainPane;
 
-    private final static String TOKEN_FILENAME = "token";
+    public final static String TOKEN_FILENAME = "token";
 
     private DonationAlertsConnection connection;
 

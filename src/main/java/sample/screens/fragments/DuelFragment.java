@@ -1,7 +1,6 @@
 package sample.screens.fragments;
 
-import javafx.fxml.FXML;
-import javafx.geometry.NodeOrientation;
+import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -77,7 +76,8 @@ public class DuelFragment {
     private TableView<WheelPoint> initTable() {
         table = new TableView<>();
         table.prefWidthProperty().bind(mainVBox.widthProperty().multiply(0.3));
-        table.setStyle("-fx-background-image: null;");
+        table.pseudoClassStateChanged(PseudoClass.getPseudoClass("duel-table"), true);
+        table.setPlaceholder(new Label(""));
         nameColumn = new TableColumn<>();
         nameColumn.prefWidthProperty().bind(table.widthProperty().multiply(0.8));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));

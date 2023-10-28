@@ -149,6 +149,17 @@ public class Controller implements ScalableController {
     private void initDonationsTable() {
         donationsTable = new DonationsTable(this, mainTable);
         tablesHBox.getChildren().add(donationsTable);
+        Object token = SaveLoadWizard.loadObject(DAConnectionController.TOKEN_FILENAME);
+        if (token != null) {
+            if (daConnection == null) {
+                daConnection = new DonationAlertsConnection();
+            }
+            if (daConnection.connect(token.toString())) {
+                donationsTable.setConnection(daConnection);
+                donationsTable.setHidden(false);
+                return;
+            }
+        }
         donationsTable.setHidden(true);
     }
 
@@ -190,6 +201,7 @@ public class Controller implements ScalableController {
         initAddNumberColumn();
         initRemoveColumn();
         mainTable.getStylesheets().add(getClass().getResource(StyleProvider.getStyle()).toExternalForm());
+        mainTable.setPlaceholder(new Label(""));
         sort();
     }
 
@@ -576,8 +588,8 @@ public class Controller implements ScalableController {
         if (daConnection == null) {
             daConnection = new DonationAlertsConnection();
         }
-        openDAConnectionScreen(daConnection);
         donationsTable.setConnection(daConnection);
+        openDAConnectionScreen(daConnection);
         Platform.runLater(() -> tablesHBox.requestLayout());
     }
 

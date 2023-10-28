@@ -38,6 +38,8 @@ public class DonationsTable extends TableView<Donation> {
         HBox.setHgrow(this, Priority.SOMETIMES);
         VBox.setVgrow(this, Priority.ALWAYS);
         setSelectionModel(null);
+        pseudoClassStateChanged(PseudoClass.getPseudoClass("donation-table"), true);
+        setPlaceholder(new Label(""));
 
         TableColumn<Donation, Void> column = new TableColumn<>();
         column.prefWidthProperty().bind(this.widthProperty().multiply(1));
