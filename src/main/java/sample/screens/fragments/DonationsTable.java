@@ -57,6 +57,7 @@ public class DonationsTable extends TableView<Donation> {
                         super.updateItem(item, empty);
                         if (empty) {
                             setGraphic(null);
+                            getTableRow().setStyle("-fx-background-color: transparent;");
                         } else {
                             fragment.setDonation(getItems().get(getIndex()));
                             setGraphic(fragment);
