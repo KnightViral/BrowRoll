@@ -1,11 +1,21 @@
 /*<<<<<<<<<<<<<<<<<<<<<< Table-view START >>>>>>>>>>>>>>>>>>>>>>>>*/
 .table-view {
     -fx-background-color: DimGray;
-    -fx-background-image: url("/pics/browFat.jpg");
-    -fx-background-size: cover;
+    -fx-background-image: url("/pics/browAsylum.png");
     -fx-background-repeat: stretch;
-    -fx-background-position: center center;
+    -fx-background-position: bottom left;
 }
+
+.table-view: donation-table{
+    -fx-background-image: url("/pics/browThanks.png");
+    -fx-background-position: bottom center;
+}
+
+.table-view: duel-table{
+    -fx-background-image: url("/pics/browDuel.png");
+    -fx-background-position: bottom left;
+}
+
 .table-view .column-header {
      -fx-background-color: DimGray;
 }
