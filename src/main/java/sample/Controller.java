@@ -711,8 +711,18 @@ public class Controller implements ScalableController {
     }
 
     @FXML
+    void onAddTimer30ButtonPress() {
+        timer.addSeconds(60);
+    }
+
+    @FXML
     void onAdd2Timer30ButtonPress() {
         timer.addSeconds(2 * 60);
+    }
+
+    @FXML
+    void onRemoveTimer30ButtonPress() {
+        timer.addSeconds(-60);
     }
 
     @FXML

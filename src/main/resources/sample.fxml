@@ -65,6 +65,8 @@
                                     <MenuItem mnemonicParsing="false" onAction="#onSetTimer30ButtonPress" style="-fx-font-weight: bold;" text="30 минут" />
                                     <MenuItem mnemonicParsing="false" onAction="#onPlayTimer30ButtonPress" style="-fx-font-weight: bold;" text="Старт" />
                                     <MenuItem mnemonicParsing="false" onAction="#onStopTimerButtonPress" style="-fx-font-weight: bold;" text="Стоп" />
+                                    <MenuItem mnemonicParsing="false" onAction="#onAddTimer30ButtonPress" style="-fx-font-weight: bold;" text="Добавить 1 минуту" />
+                                    <MenuItem mnemonicParsing="false" onAction="#onRemoveTimer30ButtonPress" style="-fx-font-weight: bold;" text="Убрать 1 минуту" />
                                     <MenuItem mnemonicParsing="false" onAction="#onAdd2Timer30ButtonPress" style="-fx-font-weight: bold;" text="Добавить 2 минуты" />
                                     <MenuItem mnemonicParsing="false" onAction="#onRemove2Timer30ButtonPress" style="-fx-font-weight: bold;" text="Убрать 2 минуты" />
                                     <CheckMenuItem fx:id="timerLabelCB" mnemonicParsing="false" onAction="#onTimerLabelVisibilityCB" selected="true" text="Большой таймер" />
